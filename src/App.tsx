@@ -1,9 +1,7 @@
 import { MainMenu, MenuItem } from "./menu/MainMenu";
+import { Map } from './modules/Map';
 
-
-
-function App() {
-  const menuItems: MenuItem[] = [
+const menuItems: MenuItem[] = [
     {name: "Кредиты", subItems: [
       {name: "Кредит наличными"}, 
       {name: "Экспресс кредит"},
@@ -36,12 +34,16 @@ function App() {
       {name: "Продать валюту"},
       {name: "Купить золото"}, 
     ]},
-  ]
+  ];
+
+
+function App() {
   return (
-      <div>
-        <MainMenu menuItems={menuItems} />
-      </div>
-    );
+    <>
+      <MainMenu menuItems={menuItems} />
+      <Map />
+    </>
+  );
 }
 
 export default App;
