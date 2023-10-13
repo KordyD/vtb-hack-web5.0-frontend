@@ -1,14 +1,22 @@
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import data from '../utils/offices.json';
 import MarkerClusterGroup from 'react-leaflet-cluster';
-import { MarkerCluster, divIcon, icon, point } from 'leaflet';
+import { MarkerCluster, Routing, divIcon, icon, latLng, point } from 'leaflet';
+import { useEffect } from 'react';
+import 'leaflet-routing-machine';
+import 'lrm-graphhopper';
+import { RouterComponent } from './Router';
+import { Data } from './Router';
 
-const offices = data;
+const offices = data as Data[];
 const markerIcon = icon({
   iconUrl: '/VTB-map-icon.svg',
   iconSize: [38, 95],
   iconAnchor: [19, 69],
 });
+// 674c54dd-0cec-4e17-a404-31c248a4bdf8
+const createRoute = () => {};
+
 const createCustomIcon = (cluster: MarkerCluster) => {
   return divIcon({
     html: `<div
@@ -62,6 +70,7 @@ export const Map = () => {
         </MarkerClusterGroup>
         {/* <Marker position={[55.7522, 37.6156]}></Marker> */}
         {/* <Marker position={[55.7522, 37.6156]} icon={markerIcon}></Marker> */}
+        <RouterComponent data={offices} />
       </MapContainer>
     </>
   );
