@@ -1,5 +1,11 @@
+import { Map } from './modules/Map';
+
 function App() {
-  return <></>;
+  return (
+    <>
+      <Map />
+    </>
+  );
 }
 
 export default App;
