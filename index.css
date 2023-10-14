@@ -49,3 +49,8 @@
 	font-weight: normal;
 	font-style: normal;
 }
+
+.body {
+    font-family: VTBGroupUIWebBook;
+    font-size: 14px;
+}

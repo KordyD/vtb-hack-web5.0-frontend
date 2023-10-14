@@ -13,9 +13,15 @@ import 'leaflet-routing-machine';
 import 'lrm-graphhopper';
 import { RouterComponent } from './Router';
 import { Data } from './Router';
-import { useState, useRef, useMemo } from 'react';
+import { useState, useRef } from 'react';
+import { useSelector } from 'react-redux';
+import { RootState } from '../store/store';
+import { useDispatch } from 'react-redux';
+import iconVtb from '/VTB-map-icon.svg';
+import { loadOffices } from '../slice/slice';
+import { Office } from "../store/initialState"
 
-const offices = data as Data[];
+const officeData = data as Data[];
 const markerIcon = icon({
   iconUrl: '/VTB-map-icon.svg',
   iconSize: [38, 95],
@@ -50,29 +56,33 @@ const createCustomIcon = (cluster: MarkerCluster) => {
   });
 };
 
-interface MapProps {
-  distancesHandler: (distances: number[]) => void;
-}
-
 // TODO: Подключить Redux. Отрисовывать объекты в списке только в рамках карты.
 // FIXME: Причесать код ниже, выглядит плохо
 // Краткая задача кода ниже: брать геолокацию юзера и писать дистанцию от отделений до него
 
-export const Map = ({ distancesHandler }: MapProps) => {
+export const Map = () => {
   const mapRef = useRef(null);
 
-  const distances: number[] = [];
+  const offices = useSelector(
+    (state: RootState) => state.mainSlice.offices.offices 
+  )
 
-  const DistanceGetter = (coord1: LatLng, coord2: LatLng) => {
+  const dispatch = useDispatch()
+
+  const createOffice = (coord1: LatLng, item: Data) => {
     const map = mapRef.current;
     if (!map) {
       return null;
     }
-    const distance = map.distance(coord1, coord2);
+    const distance: number = map.distance(coord1, latLng(item.latitude, item.longitude));
 
-    distances.push(distance);
+    const office: Office = {
+      address: item.address,
+      img: iconVtb,
+      distance: distance,
+    };
 
-    return null;
+    return office;
   };
 
   const [coords, setCoords] = useState<number[]>([55.7522, 37.6156]);
@@ -82,13 +92,7 @@ export const Map = ({ distancesHandler }: MapProps) => {
       const latitude = position.coords.latitude;
       const longitude = position.coords.longitude;
       setCoords([latitude, longitude]);
-      offices.forEach((item) =>
-        DistanceGetter(
-          latLng(coords[0], coords[1]),
-          latLng(item.latitude, item.longitude)
-        )
-      );
-      distancesHandler(distances);
+      dispatch(loadOffices(officeData.map((item) => createOffice(latLng(coords[0], coords[1]), item))));
     },
     (error) => {
       setCoords([55.7522, 37.6156]);
@@ -113,7 +117,7 @@ export const Map = ({ distancesHandler }: MapProps) => {
           // polygonOptions={{ color: 'none' }}
           chunkedLoading
         >
-          {offices.map((item, index) => (
+          {officeData.map((item, index) => (
             <Marker
               key={index}
               position={[item.latitude, item.longitude]}
