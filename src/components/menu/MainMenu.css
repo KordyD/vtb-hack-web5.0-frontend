@@ -1,0 +1,49 @@
+.main_menu {
+    background-color: white;
+    border-radius: 10px;
+    width: fit-content;
+    padding: 0.5em;
+    position: fixed;
+    left: 0;
+    top: 0;
+    margin-top: 0.5em;
+    margin-left: 0.5em;
+}
+
+.sub_menu {
+    background-color: white;
+    width: fit-content;
+    padding: 0.5em;
+    border-radius: 10px;
+    margin-left: 1em;
+    margin-top: -0.5em;
+}
+
+.menu_item {
+    font-family: VTBGroupUIWebBook;
+    background-color: white;
+    border-radius: 5px;
+    padding: 1em;
+    width: 12em;
+    text-align: center;
+    cursor: pointer;
+}
+
+.menu_item:hover {
+    background-color: rgb(241, 242, 244);
+}
+
+.menu_sub_item {
+    font-family: VTBGroupUIWebBook;
+    background-color: white;
+    border-radius: 5px;
+    padding: 1em;
+    margin-bottom: 0.2em;
+    width: 10em;
+    cursor: pointer;
+}
+
+.menu_sub_item:hover {
+    background-color: rgb(241, 242, 244);
+}
+
