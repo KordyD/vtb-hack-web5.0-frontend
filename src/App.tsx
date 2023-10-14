@@ -61,7 +61,7 @@ function App() {
     setDistances([...distances]);
   };
 
-  // TODO: Переименовать Сережин компонент MainMenu. Изменить структуру проекта (Распихать по components, modules и тд, шрифты, иконки раскидать)
+  // TODO: Переименовать Сережин компонент MainMenu.
 
   return (
     <>
