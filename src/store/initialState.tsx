@@ -1,4 +1,6 @@
 export interface InitialState {
+  mainInputValue: string;
+  inputTips: TipItem[];
   clientGeoposition: Geoposition;
   platform: Platform;
   search: SearchState;
@@ -49,6 +51,12 @@ export type FilterItem = {
   checked: boolean;
   id: string;
 };
+
+export interface TipItem {
+    itemName: string;
+    isBanks: boolean;
+    subItemName?: string;
+}
 
 export type ServiceItem = {
   name: string;

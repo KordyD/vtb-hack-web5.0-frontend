@@ -9,6 +9,7 @@ import {
   Office,
   ServiceItem,
   Geoposition,
+  TipItem,
 } from '../store/initialState';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
@@ -145,6 +146,8 @@ const initialState: InitialState = {
     offices: [],
   },
   chosenOffice: null,
+  inputTips: [],
+  mainInputValue: ""
 };
 
 export const mainMenuSlice = createSlice({
@@ -249,6 +252,14 @@ export const mainMenuSlice = createSlice({
         }
       );
     },
+
+    setTips: (state, action: PayloadAction<TipItem[]>) => {
+      state.inputTips = action.payload
+    },
+
+    setMainInput: (state, action: PayloadAction<string>) => {
+      state.mainInputValue = action.payload
+    }
   },
 });
 export const {
@@ -262,6 +273,8 @@ export const {
   toggleCheckBox,
   setDistances,
   chooseOffice,
+  setMainInput,
+  setTips,
 } = mainMenuSlice.actions;
 
 export default mainMenuSlice.reducer;

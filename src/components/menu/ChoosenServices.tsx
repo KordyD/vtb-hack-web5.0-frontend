@@ -1,5 +1,5 @@
 import { ServiceItem } from '../../store/initialState';
-import { ServiceTag } from './ServicesTag';
+import { ServiceTag } from './ServiceTag';
 import './MainMenu.css';
 
 interface ChosenServicesProps {
