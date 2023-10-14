@@ -8,24 +8,27 @@ import { useDispatch } from 'react-redux';
 import { collapseAllFilters } from '../slice/slice';
 import { Filters } from '../components/filters/FiltersComponent';
 import { createRef } from 'react';
-
+import { OfficeCardsMenu } from '../components/OfficeCardsMenu/OfficeCardsMenu';
 
 export const MainMenu = () => {
-
   const offices: Office[] = useSelector(
     (state: RootState) => state.mainSlice.offices.offices
-  )
+  );
 
   const dispatch = useDispatch();
 
-  const menuWindow: React.RefObject<HTMLInputElement> = createRef()
+  const menuWindow: React.RefObject<HTMLInputElement> = createRef();
 
   return (
-    <div ref={menuWindow} className={styles.mainMenu} onClick={(event) => {
-      if (event.target === menuWindow.current) {
-        dispatch(collapseAllFilters())
-      }
-    }}>
+    <div
+      ref={menuWindow}
+      className={styles.mainMenu}
+      onClick={(event) => {
+        if (event.target === menuWindow.current) {
+          dispatch(collapseAllFilters());
+        }
+      }}
+    >
       <input />
       <Filters />
       <OfficeCardsMenu />

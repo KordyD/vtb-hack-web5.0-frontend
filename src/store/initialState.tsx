@@ -1,16 +1,16 @@
 export interface InitialState {
-    clientGeoposition: Geoposition,
-    platform: Platform,
-    search: SearchState,
-    filters: FiltersState,
-    tags: TagState,
-    offices: OfficesState,
+  clientGeoposition: Geoposition;
+  platform: Platform;
+  search: SearchState;
+  filters: FiltersState;
+  tags: TagState;
+  offices: OfficesState;
   chosenOffice: number | null;
 }
 
 export interface Geoposition {
-    latitude: number,
-    longitude: number
+  latitude: number;
+  longitude: number;
 }
 
 export enum Platform {
@@ -40,25 +40,23 @@ export interface FiltersState {
 }
 
 export interface SubItem {
-    choosen: boolean,
-    name: string,
+  chosen: boolean;
+  name: string;
 }
 
 export type FilterItem = {
-    name: string,
-    checked: boolean,
-    id: string,
-}
-
-export type FilterItem = {};
+  name: string;
+  checked: boolean;
+  id: string;
+};
 
 export type ServiceItem = {
-    name: string,
-    expanded: boolean,
-    subItems: SubItem[],
-    choosen: boolean,
-    clentId: string,
-}
+  name: string;
+  expanded: boolean;
+  subItems: SubItem[];
+  chosen: boolean;
+  clentId: string;
+};
 
 export interface Filter {
   chosen: boolean;

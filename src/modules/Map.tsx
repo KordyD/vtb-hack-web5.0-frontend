@@ -4,6 +4,7 @@ import {
   Marker,
   Popup,
   ZoomControl,
+  useMap,
 } from 'react-leaflet';
 import data from '../utils/offices.json';
 import MarkerClusterGroup from 'react-leaflet-cluster';
@@ -16,14 +17,14 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../store/store';
 import { useDispatch } from 'react-redux';
 import iconVtb from '/VTB-map-icon.svg';
-import { loadOffices, setClientPosition } from '../slice/slice';
-import { Geoposition, Office } from "../store/initialState"
+import { loadOffices, setClientPosition, setDistances } from '../slice/slice';
+import { Geoposition, Office } from '../store/initialState';
 import { debounce, throttle } from 'lodash';
 import { Subject } from 'rxjs';
 import { createCustomIcon } from '../utils/createCustomIcon';
 import { CenterMapOnPoint } from '../components/helpers/CenterMapOnPoint';
-import { CreateOffice } from '../components/helpers/CreateOffice';
-
+// import { CreateOffice } from '../components/helpers/CreateOffice';
+import { LatLng } from 'leaflet';
 
 const officeData = data as Data[];
 const markerIcon = icon({
@@ -32,51 +33,76 @@ const markerIcon = icon({
   iconAnchor: [19, 69],
 });
 
-const locationSubject: Subject<number[]> = new Subject<number[]>();
-
-navigator.geolocation.watchPosition(
-  (position) => {
-    const latitude = position.coords.latitude;
-    const longitude = position.coords.longitude;
-    console.log("new position")
-    locationSubject.next([latitude, longitude])
-  },
-  (error) => {
-    locationSubject.next([55.7522, 37.6156])
-  },
-);
-
 // TODO: Подключить Redux. Отрисовывать объекты в списке только в рамках карты.
 // FIXME: Причесать код ниже, выглядит плохо
 // Краткая задача кода ниже: брать геолокацию юзера и писать дистанцию от отделений до него
 
 export const Map = () => {
-  const mapRef = useRef(null);
+  const CreateOffice = ({
+    coord1,
+    coord2,
+    id,
+  }: {
+    coord1: LatLng;
+    coord2: LatLng;
+    id: number;
+  }) => {
+    const dispatch = useDispatch();
+
+    const map = useMap();
+
+    const distance: number = Math.round(map.distance(coord1, coord2)) / 1000;
+
+    useEffect(() => {
+      dispatch(setDistances({ id, distance }));
+    });
+
+    return null;
+  };
 
   const coords: Geoposition = useSelector(
     (state: RootState) => state.mainSlice.clientGeoposition
-  )
+  );
 
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   const chosenOffice = useSelector(
     (state: RootState) => state.mainSlice.chosenOffice
-  );  
+  );
 
   useEffect(() => {
-    locationSubject.subscribe(([latitude, longitude]) => {
-      dispatch(setClientPosition({latitude, longitude}))
-      dispatch(loadOffices(officeData.map((item, index) => ({
-          address: item!.address,
-          img: iconVtb,
-          distance: item!.distance,
-          id: index,
-        }))));
-    })
-  })
-
-
-  
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const latitude = position.coords.latitude;
+        const longitude = position.coords.longitude;
+        console.log('new position');
+        dispatch(setClientPosition({ latitude, longitude }));
+        dispatch(
+          loadOffices(
+            officeData.map((item, index) => ({
+              address: item!.address,
+              img: iconVtb,
+              distance: item!.distance,
+              id: index,
+            }))
+          )
+        );
+      },
+      (error) => {
+        dispatch(setClientPosition({ latitude: 55.7522, longitude: 37.6156 }));
+        dispatch(
+          loadOffices(
+            officeData.map((item, index) => ({
+              address: item!.address,
+              img: iconVtb,
+              distance: item!.distance,
+              id: index,
+            }))
+          )
+        );
+      }
+    );
+  });
 
   return (
     <>

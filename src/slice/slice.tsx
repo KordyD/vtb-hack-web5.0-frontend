@@ -1,101 +1,138 @@
-import { ChooseServiceAction, ExpandFilterAction } from "../actions/servicesMenuActions";
-import { InitialState, MainMenuAction, Platform, Office, ServiceItem, Geoposition } from "../store/initialState";
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import {
+  ChooseServiceAction,
+  ExpandFilterAction,
+} from '../actions/servicesMenuActions';
+import {
+  InitialState,
+  MainMenuAction,
+  Platform,
+  Office,
+  ServiceItem,
+  Geoposition,
+} from '../store/initialState';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 const banksServices: ServiceItem[] = [
-    {
-      clentId: "PF",
-      choosen: false,
-        expanded: false,
-        name: 'Кредиты',
-        subItems: [
-            { name: 'Кредит наличными', choosen: false },
-            { name: 'Экспресс кредит', choosen: false },
-            { name: 'Рефинансирование', choosen: false },
-        ],
-    },
-    {
-      clentId: "PF",
-      choosen: false,
-        expanded: false,
-      name: 'Вклады',
-      subItems: [{ name: 'Рассчитать кредит', choosen: false }, { name: 'Кредит наличными', choosen: false }],
-    },
-    {
-      clentId: "PF",
-      choosen: false,
-        expanded: false,
-      name: 'Карты',
-      subItems: [
-        { name: 'Дебетовые карты', choosen: false },
-        { name: 'Кредитные карты', choosen: false },
-        { name: 'Пенсионные карты', choosen: false },
-        { name: 'Карты жителя', choosen: false },
-      ],
-    },
-    
-    {clentId: "PF",choosen: false, expanded: false, name: 'Ипотека', subItems: [] },
-    {
-      clentId: "PF",
-      choosen: false,
-        expanded: false,
-      name: 'Автокредиты',
-      subItems: [
-        { name: 'Автокредит наличными', choosen: false },
-        { name: 'Автокредит в автосалоне', choosen: false },
-      ],
-    },
-    {clentId: "PF", choosen: false, expanded: false, name: 'Вклады и счета', subItems: [] },
-    {clentId: "PF", choosen: false, expanded: false, name: 'Инвестиции', subItems: [] },
-    {clentId: "PF", choosen: false, expanded: false, name: 'Платежи и переводы', subItems: [{ name: 'Оплата услуг', choosen: false }] },
-    {
-      clentId: "PF",
-      choosen: false,
-        expanded: false,
-      name: 'Другие услуги',
-      subItems: [
-        { name: 'Страховые и сервисные продукты', choosen: false },
-        { name: 'Аренда сейфовых ячеек', choosen: false },
-        { name: 'Банкротство физических лиц', choosen: false },
-      ],
-    },
-    {
-      clentId: "PF",
-      choosen: false,
-        expanded: false,
-      name: 'Валюта и золото',
-      subItems: [
-        { name: 'Купить валюту', choosen: false },
-        { name: 'Продать валюту', choosen: false },
-        { name: 'Купить золото', choosen: false },
-      ],
-    },
-  ];
+  {
+    clentId: 'PF',
+    chosen: false,
+    expanded: false,
+    name: 'Кредиты',
+    subItems: [
+      { name: 'Кредит наличными', chosen: false },
+      { name: 'Экспресс кредит', chosen: false },
+      { name: 'Рефинансирование', chosen: false },
+    ],
+  },
+  {
+    clentId: 'PF',
+    chosen: false,
+    expanded: false,
+    name: 'Вклады',
+    subItems: [
+      { name: 'Рассчитать кредит', chosen: false },
+      { name: 'Кредит наличными', chosen: false },
+    ],
+  },
+  {
+    clentId: 'PF',
+    chosen: false,
+    expanded: false,
+    name: 'Карты',
+    subItems: [
+      { name: 'Дебетовые карты', chosen: false },
+      { name: 'Кредитные карты', chosen: false },
+      { name: 'Пенсионные карты', chosen: false },
+      { name: 'Карты жителя', chosen: false },
+    ],
+  },
+
+  {
+    clentId: 'PF',
+    chosen: false,
+    expanded: false,
+    name: 'Ипотека',
+    subItems: [],
+  },
+  {
+    clentId: 'PF',
+    chosen: false,
+    expanded: false,
+    name: 'Автокредиты',
+    subItems: [
+      { name: 'Автокредит наличными', chosen: false },
+      { name: 'Автокредит в автосалоне', chosen: false },
+    ],
+  },
+  {
+    clentId: 'PF',
+    chosen: false,
+    expanded: false,
+    name: 'Вклады и счета',
+    subItems: [],
+  },
+  {
+    clentId: 'PF',
+    chosen: false,
+    expanded: false,
+    name: 'Инвестиции',
+    subItems: [],
+  },
+  {
+    clentId: 'PF',
+    chosen: false,
+    expanded: false,
+    name: 'Платежи и переводы',
+    subItems: [{ name: 'Оплата услуг', chosen: false }],
+  },
+  {
+    clentId: 'PF',
+    chosen: false,
+    expanded: false,
+    name: 'Другие услуги',
+    subItems: [
+      { name: 'Страховые и сервисные продукты', chosen: false },
+      { name: 'Аренда сейфовых ячеек', chosen: false },
+      { name: 'Банкротство физических лиц', chosen: false },
+    ],
+  },
+  {
+    clentId: 'PF',
+    chosen: false,
+    expanded: false,
+    name: 'Валюта и золото',
+    subItems: [
+      { name: 'Купить валюту', chosen: false },
+      { name: 'Продать валюту', chosen: false },
+      { name: 'Купить золото', chosen: false },
+    ],
+  },
+];
 
 const initialState: InitialState = {
   clientGeoposition: {
     latitude: 0,
-    longitude: 0
+    longitude: 0,
   },
   platform: Platform.DESKTOP,
   search: {},
   filters: {
     opened: false,
     banks: {
-        choosed: true,
-        filters: [
-          {
-            id: "PF",
-            name: "Физические лица",
-            checked: true,
-          },
-          {
-            id: "LF",
-            name: "Юридические лица",
-            checked: false,
-          }
-        ],
-        services: banksServices
+      chosen: true,
+      filters: [
+        {
+          id: 'PF',
+          name: 'Физические лица',
+          checked: true,
+        },
+        {
+          id: 'LF',
+          name: 'Юридические лица',
+          checked: false,
+        },
+      ],
+      services: banksServices,
     },
     itms: {
       chosen: false,
@@ -169,73 +206,102 @@ export const mainMenuSlice = createSlice({
     },
 
     collapseAllFilters: (state) => {
-      state.filters.banks.services = state.filters.banks.services.map(service => ({...service, expanded: false}))
+      state.filters.banks.services = state.filters.banks.services.map(
+        (service) => ({ ...service, expanded: false })
+      );
     },
 
     chooseItem: (state, action: PayloadAction<ChooseServiceAction>) => {
-      const { itemName, subItemName, isBanks, choosen } = action.payload;
+      const { itemName, subItemName, isBanks, chosen } = action.payload;
       if (subItemName === undefined) {
         if (isBanks) {
-          state.filters.banks.services = state.filters.banks.services.map(setServiceChoosen(itemName, choosen))
+          state.filters.banks.services = state.filters.banks.services.map(
+            setServiceChosen(itemName, chosen)
+          );
         } else {
-          state.filters.itms.services = state.filters.itms.services.map(setServiceChoosen(itemName, choosen))
+          state.filters.itms.services = state.filters.itms.services.map(
+            setServiceChosen(itemName, chosen)
+          );
         }
       } else {
         if (isBanks) {
-          state.filters.banks.services = state.filters.banks.services.map(setServiceSubItemChoosen(itemName, subItemName!, choosen))
+          state.filters.banks.services = state.filters.banks.services.map(
+            setServiceSubItemChosen(itemName, subItemName!, chosen)
+          );
         } else {
-          state.filters.itms.services = state.filters.itms.services.map(setServiceSubItemChoosen(itemName, subItemName!, choosen))
+          state.filters.itms.services = state.filters.itms.services.map(
+            setServiceSubItemChosen(itemName, subItemName!, chosen)
+          );
         }
       }
     },
 
     toggleCheckBox: (state, action: PayloadAction<string>) => {
-      state.filters.banks.filters = state.filters.banks.filters.map(checkBox => {
-        if (checkBox.id === action.payload) {
-          checkBox.checked = true;
-        } else {
-          checkBox.checked = false;
-        }
+      state.filters.banks.filters = state.filters.banks.filters.map(
+        (checkBox) => {
+          if (checkBox.id === action.payload) {
+            checkBox.checked = true;
+          } else {
+            checkBox.checked = false;
+          }
 
-        return {...checkBox};
-      })
-    }
+          return { ...checkBox };
+        }
+      );
+    },
   },
 });
-export const { toggleFilters, loadOffices, expandFilter, switchOption, setClientPosition, collapseAllFilters, chooseItem, toggleCheckBox } =
-  mainMenuSlice.actions;
+export const {
+  toggleFilters,
+  loadOffices,
+  expandFilter,
+  switchOption,
+  setClientPosition,
+  collapseAllFilters,
+  chooseItem,
+  toggleCheckBox,
+  setDistances,
+  chooseOffice,
+} = mainMenuSlice.actions;
 
 export default mainMenuSlice.reducer;
 
-function setServiceChoosen(itemName: string, choosen: boolean) {
+function setServiceChosen(itemName: string, chosen: boolean) {
   return (service: ServiceItem) => {
     if (service.name === itemName) {
-      service.choosen = choosen;
+      service.chosen = chosen;
     }
     return { ...service };
   };
 }
 
-function setServiceSubItemChoosen(itemName: string, subItemName: string, choosen: boolean) {
+function setServiceSubItemChosen(
+  itemName: string,
+  subItemName: string,
+  chosen: boolean
+) {
   return (service: ServiceItem) => {
     if (service.name == itemName) {
-      service.subItems = service.subItems.map(subItem => {
+      service.subItems = service.subItems.map((subItem) => {
         if (subItem.name === subItemName) {
-          subItem.choosen = choosen;
+          subItem.chosen = chosen;
         }
-        return {...subItem}
-      })
-      service.choosen = service.subItems.some(subItem => subItem.choosen)
+        return { ...subItem };
+      });
+      service.chosen = service.subItems.some((subItem) => subItem.chosen);
     }
     return { ...service };
   };
 }
 
-function expandParticularService(services: ServiceItem[], action: { payload: ExpandFilterAction; type: string; }) {
-    return services.map((service, index) => {
-        if (index === action.payload.menuItemKey) {
-            return { ...service, expanded: true };
-        }
-        return { ...service, expanded: false };
-    });
+function expandParticularService(
+  services: ServiceItem[],
+  action: { payload: ExpandFilterAction; type: string }
+) {
+  return services.map((service, index) => {
+    if (index === action.payload.menuItemKey) {
+      return { ...service, expanded: true };
+    }
+    return { ...service, expanded: false };
+  });
 }

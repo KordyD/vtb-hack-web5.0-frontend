@@ -1,27 +1,36 @@
-import { useDispatch } from "react-redux"
-import { SubItem } from "../../store/initialState"
-import "./MainMenu.css"
-import { chooseItem } from "../../slice/slice"
+import { useDispatch } from 'react-redux';
+import { SubItem } from '../../store/initialState';
+import './MainMenu.css';
+import { chooseItem } from '../../slice/slice';
 
 interface SubItemProps extends SubItem {
-    itemName: string,
-    isBanks: boolean,
+  itemName: string;
+  isBanks: boolean;
 }
 
-export const SubItemComponent = ({name, choosen, itemName, isBanks}: SubItemProps) => {
+export const SubItemComponent = ({
+  name,
+  chosen,
+  itemName,
+  isBanks,
+}: SubItemProps) => {
+  const dispatch = useDispatch();
 
-    const dispatch = useDispatch()
-
-    return (
-        <div onClick={() => {dispatch(chooseItem(
-                {
-                    itemName,
-                    subItemName: name,
-                    isBanks: isBanks,
-                    choosen: !choosen
-                }
-            ))}} className={choosen ? "menu_item_choosen" : "menu_item"}>
-            {name}
-        </div>
-    )
-}
+  return (
+    <div
+      onClick={() => {
+        dispatch(
+          chooseItem({
+            itemName,
+            subItemName: name,
+            isBanks: isBanks,
+            chosen: !chosen,
+          })
+        );
+      }}
+      className={chosen ? 'menu_item_chosen' : 'menu_item'}
+    >
+      {name}
+    </div>
+  );
+};

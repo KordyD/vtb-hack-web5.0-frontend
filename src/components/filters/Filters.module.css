@@ -11,33 +11,33 @@
 }
 
 .optionCard {
-    background-color: white;
-    border: 1px solid rgb(13, 105, 242);
-    font-size: 14px;
-    text-align: center;
-    border-radius: 30px;
-    width: auto;
-    padding-top: 0.5em;
-    padding-bottom: 0.5em;
-    padding-right: 1em;
-    padding-left: 1em;
-    cursor: pointer;
-    margin-right: 2em;
-  }
+  background-color: white;
+  border: 1px solid rgb(13, 105, 242);
+  font-size: 14px;
+  text-align: center;
+  border-radius: 30px;
+  width: auto;
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+  padding-right: 1em;
+  padding-left: 1em;
+  cursor: pointer;
+  margin-right: 2em;
+}
 
-.optionCardChoosed {
-    background-color: rgb(13, 105, 242);
-    color: white;
-    font-size: 14px;
-    text-align: center;
-    border-radius: 30px;
-    width: auto;
-    padding-top: 0.5em;
-    padding-bottom: 0.5em;
-    padding-right: 1em;
-    padding-left: 1em;
-    cursor: pointer;
-    margin-right: 2em;
+.optionCardChosen {
+  background-color: rgb(13, 105, 242);
+  color: white;
+  font-size: 14px;
+  text-align: center;
+  border-radius: 30px;
+  width: auto;
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+  padding-right: 1em;
+  padding-left: 1em;
+  cursor: pointer;
+  margin-right: 2em;
 }
 
 .optionCard:hover {
@@ -45,7 +45,7 @@
 }
 
 .filterCard:hover {
-    background-color: rgb(241, 242, 244);
+  background-color: rgb(241, 242, 244);
 }
 
 .checkBoxesContainer {
