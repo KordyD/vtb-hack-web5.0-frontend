@@ -1,0 +1,9 @@
+.officeCard {
+  display: flex;
+  gap: 10px;
+}
+
+.icon {
+  position: relative;
+  top: -15px;
+}
