@@ -1,4 +1,4 @@
-import { SubItem } from "./MainMenu";
+import { SubItem } from "./ServicesMenu";
 import "./MainMenu.css"
 
 export const SubItemComponent = ({name}: SubItem) => {

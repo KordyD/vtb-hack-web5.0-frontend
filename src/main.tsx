@@ -6,9 +6,13 @@ import './assets/fonts/VTBGroupUI-Light/VTBGroupUI-Light.ttf';
 import './assets/fonts/VTBGroupUI-Bold/VTBGroupUI-Bold.ttf';
 import './assets/fonts/VTBGroupUI-DemiBold/VTBGroupUI-DemiBold.ttf';
 import './normilize.css';
+import { Provider } from 'react-redux';
+import { store } from './store/store.tsx';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   // <React.StrictMode>
-  <App />
+  <Provider store={store}>
+    <App />
+  </Provider>
   // /* </React.StrictMode> */
 );
