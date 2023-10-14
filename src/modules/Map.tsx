@@ -70,6 +70,29 @@ export const Map = () => {
     (state: RootState) => state.mainSlice.chosenOffice
   );
 
+  const mapRef = useRef()
+
+  const latLng = (latitude: number, longitude: number) => {
+    return new LatLng(latitude, longitude)
+  }
+
+  const createOffice = (id: number, coord1: LatLng, item: Data) => {
+    const map = mapRef.current;
+    if (!map) {
+      return null;
+    }
+    const distance: number = map.distance(coord1, latLng(item.latitude, item.longitude));
+
+    const office: Office = {
+      address: item.address,
+      img: iconVtb,
+      distance: distance,
+      id
+    };
+
+    return office;
+  };
+
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(
       (position) => {
@@ -79,12 +102,7 @@ export const Map = () => {
         dispatch(setClientPosition({ latitude, longitude }));
         dispatch(
           loadOffices(
-            officeData.map((item, index) => ({
-              address: item!.address,
-              img: iconVtb,
-              distance: item!.distance,
-              id: index,
-            }))
+            officeData.map((item, index) => createOffice(index, latLng(latitude, longitude), item))
           )
         );
       },
@@ -92,12 +110,7 @@ export const Map = () => {
         dispatch(setClientPosition({ latitude: 55.7522, longitude: 37.6156 }));
         dispatch(
           loadOffices(
-            officeData.map((item, index) => ({
-              address: item!.address,
-              img: iconVtb,
-              distance: item!.distance,
-              id: index,
-            }))
+            officeData.map((item, index) => createOffice(index, latLng(coords.latitude, coords.longitude), item))
           )
         );
       }
@@ -111,6 +124,7 @@ export const Map = () => {
         center={[coords.latitude, coords.longitude]}
         zoom={9}
         zoomControl={false}
+        ref={mapRef}
       >
         <TileLayer url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png' />
         <ZoomControl position='bottomright' />
@@ -130,11 +144,6 @@ export const Map = () => {
                 chosenOffice={chosenOffice}
                 coords={[coords.latitude, coords.longitude]}
                 officeData={officeData}
-              />
-              <CreateOffice
-                coord1={[item.latitude, item.longitude]}
-                coord2={[coords.latitude, coords.longitude]}
-                id={index}
               />
               <Popup>{index}</Popup>
             </Marker>
