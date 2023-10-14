@@ -13,10 +13,3 @@
   padding: 25px 25px;
   overflow-y: scroll;
 }
-
-.list {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  margin-top: 25px;
-}
