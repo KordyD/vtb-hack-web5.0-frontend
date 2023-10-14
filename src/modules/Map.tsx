@@ -8,7 +8,7 @@ import {
 } from 'react-leaflet';
 import data from '../utils/offices.json';
 import MarkerClusterGroup from 'react-leaflet-cluster';
-import { icon } from 'leaflet';
+import { Control, icon } from 'leaflet';
 import 'leaflet-routing-machine';
 import 'lrm-graphhopper';
 import { Data } from './Router';
@@ -19,12 +19,12 @@ import { useDispatch } from 'react-redux';
 import iconVtb from '/VTB-map-icon.svg';
 import { loadOffices, setClientPosition, setDistances } from '../slice/slice';
 import { Geoposition, Office } from '../store/initialState';
-import { debounce, throttle } from 'lodash';
-import { Subject } from 'rxjs';
 import { createCustomIcon } from '../utils/createCustomIcon';
 import { CenterMapOnPoint } from '../components/helpers/CenterMapOnPoint';
 // import { CreateOffice } from '../components/helpers/CreateOffice';
 import { LatLng } from 'leaflet';
+import { Routing } from 'leaflet';
+import './Map.css';
 
 const officeData = data as Data[];
 const markerIcon = icon({
@@ -38,26 +38,33 @@ const markerIcon = icon({
 // Краткая задача кода ниже: брать геолокацию юзера и писать дистанцию от отделений до него
 
 export const Map = () => {
-  const CreateOffice = ({
-    coord1,
-    coord2,
-    id,
-  }: {
-    coord1: LatLng;
-    coord2: LatLng;
-    id: number;
-  }) => {
-    const dispatch = useDispatch();
+  const mapRef = useRef(null);
 
-    const map = useMap();
+  const [routing, setRouting] = useState<Control | null>();
 
-    const distance: number = Math.round(map.distance(coord1, coord2)) / 1000;
-
-    useEffect(() => {
-      dispatch(setDistances({ id, distance }));
+  const routerHandler = (departure: number[], destination: number[]) => {
+    const map = mapRef.current;
+    if (!map) {
+      return null;
+    }
+    if (routing) {
+      routing.remove();
+    }
+    const route = Routing.control({
+      waypoints: [
+        latLng(departure[0], departure[1]),
+        latLng(destination[0], destination[1]),
+      ],
+      createMarker: function () {
+        return null;
+      },
+      routeWhileDragging: false,
+      show: false,
+      addWaypoints: false,
+      router: Routing.graphHopper('674c54dd-0cec-4e17-a404-31c248a4bdf8'),
     });
-
-    return null;
+    setRouting(route);
+    route.addTo(map);
   };
 
   const coords: Geoposition = useSelector(
@@ -70,24 +77,25 @@ export const Map = () => {
     (state: RootState) => state.mainSlice.chosenOffice
   );
 
-  const mapRef = useRef()
-
   const latLng = (latitude: number, longitude: number) => {
-    return new LatLng(latitude, longitude)
-  }
+    return new LatLng(latitude, longitude);
+  };
 
   const createOffice = (id: number, coord1: LatLng, item: Data) => {
     const map = mapRef.current;
     if (!map) {
       return null;
     }
-    const distance: number = map.distance(coord1, latLng(item.latitude, item.longitude));
+    const distance: number = map.distance(
+      coord1,
+      latLng(item.latitude, item.longitude)
+    );
 
     const office: Office = {
       address: item.address,
       img: iconVtb,
       distance: distance,
-      id
+      id,
     };
 
     return office;
@@ -98,11 +106,12 @@ export const Map = () => {
       (position) => {
         const latitude = position.coords.latitude;
         const longitude = position.coords.longitude;
-        console.log('new position');
         dispatch(setClientPosition({ latitude, longitude }));
         dispatch(
           loadOffices(
-            officeData.map((item, index) => createOffice(index, latLng(latitude, longitude), item))
+            officeData.map((item, index) =>
+              createOffice(index, latLng(latitude, longitude), item)
+            )
           )
         );
       },
@@ -110,7 +119,13 @@ export const Map = () => {
         dispatch(setClientPosition({ latitude: 55.7522, longitude: 37.6156 }));
         dispatch(
           loadOffices(
-            officeData.map((item, index) => createOffice(index, latLng(coords.latitude, coords.longitude), item))
+            officeData.map((item, index) =>
+              createOffice(
+                index,
+                latLng(coords.latitude, coords.longitude),
+                item
+              )
+            )
           )
         );
       }
@@ -145,7 +160,18 @@ export const Map = () => {
                 coords={[coords.latitude, coords.longitude]}
                 officeData={officeData}
               />
-              <Popup>{index}</Popup>
+              <Popup>
+                <button
+                  onClick={() =>
+                    routerHandler(
+                      [coords.latitude, coords.longitude],
+                      [item.latitude, item.longitude]
+                    )
+                  }
+                >
+                  Проложить маршрут
+                </button>
+              </Popup>
             </Marker>
           ))}
         </MarkerClusterGroup>

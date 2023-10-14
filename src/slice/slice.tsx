@@ -111,8 +111,8 @@ const banksServices: ServiceItem[] = [
 
 const initialState: InitialState = {
   clientGeoposition: {
-    latitude: 0,
-    longitude: 0,
+    latitude: 55.7522,
+    longitude: 37.6156,
   },
   platform: Platform.DESKTOP,
   search: {},
