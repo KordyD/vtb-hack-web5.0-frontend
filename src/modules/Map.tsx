@@ -13,13 +13,15 @@ import 'leaflet-routing-machine';
 import 'lrm-graphhopper';
 import { RouterComponent } from './Router';
 import { Data } from './Router';
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store/store';
 import { useDispatch } from 'react-redux';
 import iconVtb from '/VTB-map-icon.svg';
-import { loadOffices } from '../slice/slice';
-import { Office } from "../store/initialState"
+import { loadOffices, setClientPosition } from '../slice/slice';
+import { Geoposition, Office } from "../store/initialState"
+import { debounce, throttle } from 'lodash';
+import { Subject } from 'rxjs';
 
 const officeData = data as Data[];
 const markerIcon = icon({
@@ -56,6 +58,20 @@ const createCustomIcon = (cluster: MarkerCluster) => {
   });
 };
 
+const locationSubject: Subject<number[]> = new Subject<number[]>();
+
+navigator.geolocation.watchPosition(
+  (position) => {
+    const latitude = position.coords.latitude;
+    const longitude = position.coords.longitude;
+    console.log("new position")
+    locationSubject.next([latitude, longitude])
+  },
+  (error) => {
+    locationSubject.next([55.7522, 37.6156])
+  },
+);
+
 // TODO: Подключить Redux. Отрисовывать объекты в списке только в рамках карты.
 // FIXME: Причесать код ниже, выглядит плохо
 // Краткая задача кода ниже: брать геолокацию юзера и писать дистанцию от отделений до него
@@ -63,8 +79,8 @@ const createCustomIcon = (cluster: MarkerCluster) => {
 export const Map = () => {
   const mapRef = useRef(null);
 
-  const offices = useSelector(
-    (state: RootState) => state.mainSlice.offices.offices 
+  const coords: Geoposition = useSelector(
+    (state: RootState) => state.mainSlice.clientGeoposition
   )
 
   const dispatch = useDispatch()
@@ -85,32 +101,30 @@ export const Map = () => {
     return office;
   };
 
-  const [coords, setCoords] = useState<number[]>([55.7522, 37.6156]);
+  useMemo
 
-  navigator.geolocation.watchPosition(
-    (position) => {
-      const latitude = position.coords.latitude;
-      const longitude = position.coords.longitude;
-      setCoords([latitude, longitude]);
-      dispatch(loadOffices(officeData.map((item) => createOffice(latLng(coords[0], coords[1]), item))));
-    },
-    (error) => {
-      setCoords([55.7522, 37.6156]);
-    }
-  );
+  useEffect(() => {
+    locationSubject.subscribe(([latitude, longitude]) => {
+      dispatch(setClientPosition({latitude, longitude}))
+      dispatch(loadOffices(officeData.map((item) => createOffice(latLng(latitude, longitude), item))));
+    })
+  })
+
+
+  
 
   return (
     <>
       <MapContainer
         style={{ height: '100vh', zIndex: '0' }}
-        center={[coords[0], coords[1]]}
+        center={[coords.latitude, coords.longitude]}
         zoom={9}
         zoomControl={false}
         ref={mapRef}
       >
         <TileLayer url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png' />
         <ZoomControl position='bottomright' />
-        <Marker position={[coords[0], coords[1]]} />
+        <Marker position={[coords.latitude, coords.longitude]} />
         <MarkerClusterGroup
           iconCreateFunction={createCustomIcon}
           showCoverageOnHover={false}
