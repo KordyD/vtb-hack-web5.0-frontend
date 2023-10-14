@@ -1,7 +1,7 @@
 .main_menu {
     background-color: white;
     border-radius: 10px;
-    width: fit-content;
+    width: 190px;
     margin-top: 2em;
     padding-top: 3px;
     padding-bottom: 3px;
@@ -10,11 +10,12 @@
 
 .sub_menu {
     background-color: white;
-    width: fit-content;
+    width: 190px;
     border-radius: 10px;
     border: 1px solid rgb(13, 105, 242);
     margin-left: 1em;
     padding-top: 3px;
+    margin-top: -0.25em;
     padding-bottom: 3px;
 }
 
@@ -23,7 +24,7 @@
     background-color: white;
     border-radius: 5px;
     padding: 1em;
-    width: 12em;
+    width: auto;
     cursor: pointer;
 }
 
@@ -36,8 +37,7 @@
     background-color: white;
     border-radius: 5px;
     padding: 1em;
-    margin-bottom: 0.2em;
-    width: 10em;
+    width: auto;
     cursor: pointer;
 }
 

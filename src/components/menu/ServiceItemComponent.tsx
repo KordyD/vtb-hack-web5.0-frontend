@@ -38,7 +38,8 @@ export const ServiceItemComponent = ({id, isBanks, expanded, name, subItems }: M
     
     return (
         <div ref={itemRef} className="menu_item" onClick={onItemClickHandler} >
-            <span>{name} {isSubItems ? (<span>&#8594;</span>) : ""}</span>
+            <span>{name}</span>
+            {isSubItems ? (<span>&#8594;</span>) : ""}
             {expanded && <div className="sub_menu" style={{position: 'fixed', top: top, left: left, display: isSubItems ? 'inline' : 'none'}}>
                 {subItems.map((subItem, key) => (<SubItemComponent key={key} name={subItem.name} />))}
                 </div>}
