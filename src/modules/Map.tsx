@@ -162,6 +162,7 @@ export const Map = () => {
               />
               <Popup>
                 <button
+                  className='popup-routing-button'
                   onClick={() =>
                     routerHandler(
                       [coords.latitude, coords.longitude],

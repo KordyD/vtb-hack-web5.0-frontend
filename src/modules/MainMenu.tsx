@@ -7,7 +7,7 @@ import { RootState } from '../store/store';
 import { useDispatch } from 'react-redux';
 import { collapseAllFilters, setMainInput, setTips } from '../slice/slice';
 import { Filters } from '../components/filters/FiltersComponent';
-import { createRef } from 'react';
+import { createRef, useState } from 'react';
 import { OfficeCardsMenu } from '../components/OfficeCardsMenu/OfficeCardsMenu';
 import { MainInput } from './MainInput';
 import { InputTips } from './InputTips';
@@ -19,28 +19,45 @@ export const MainMenu = () => {
 
   const tips: TipItem[] = useSelector(
     (state: RootState) => state.mainSlice.inputTips
-  )
+  );
 
   const dispatch = useDispatch();
 
   const menuWindow: React.RefObject<HTMLInputElement> = createRef();
 
+  const [menu, setMenu] = useState(false);
+
   return (
-    <div
-      ref={menuWindow}
-      className={styles.mainMenu}
-      onClick={(event) => {
-        if (event.target === menuWindow.current) {
-          dispatch(collapseAllFilters());
-          dispatch(setTips([]))
-          dispatch(setMainInput(""))
-        }
-      }}
-    >
-      <MainInput />
-      {tips.length > 0 && <InputTips inputTips={tips} />}
-      <Filters />
-      <OfficeCardsMenu />
-    </div>
+    <>
+      <button
+        onClick={() => setMenu(true)}
+        className={`${styles.menuButton} ${
+          menu ? '' : styles.activeMenuButton
+        }`}
+      >
+        &#x2714;
+      </button>
+      <div
+        ref={menuWindow}
+        className={`${styles.mainMenu} ${menu ? styles.active : ''}`}
+        onClick={(event) => {
+          if (event.target === menuWindow.current) {
+            dispatch(collapseAllFilters());
+            dispatch(setTips([]));
+            dispatch(setMainInput(''));
+          }
+        }}
+      >
+        <div className={styles.wrapper}>
+          <MainInput />
+          <button className={styles.crossButton} onClick={() => setMenu(false)}>
+            &#x2716;
+          </button>
+        </div>
+        {tips.length > 0 && <InputTips inputTips={tips} />}
+        <Filters />
+        <OfficeCardsMenu />
+      </div>
+    </>
   );
 };

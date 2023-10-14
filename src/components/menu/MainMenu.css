@@ -66,3 +66,9 @@
 .tags_container {
   margin-top: 1em;
 }
+
+@media (max-width: 540px) {
+  .sub_menu {
+    left: 90px !important;
+  }
+}

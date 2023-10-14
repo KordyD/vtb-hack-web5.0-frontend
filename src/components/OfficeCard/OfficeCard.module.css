@@ -9,6 +9,12 @@
   padding: 5px 10px;
 }
 
+.wrapper {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
 .officeCard:hover {
   background-color: ghostwhite;
 }
@@ -16,4 +22,17 @@
 .icon {
   position: relative;
   top: -15px;
+}
+
+@media (max-width: 540px) {
+  .officeCard {
+    flex-direction: column;
+  }
+  .wrapper {
+    flex-direction: column;
+  }
+  .icon {
+    width: 25px;
+    top: 0;
+  }
 }

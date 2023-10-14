@@ -89,3 +89,55 @@
 .tip:hover {
   background-color: rgb(184, 184, 184);
 }
+
+.wrapper {
+  display: flex;
+  gap: 10px;
+}
+
+.crossButton,
+.menuButton {
+  display: none;
+  background-color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.menuButton {
+  position: absolute;
+  z-index: 2;
+  top: 15px;
+  left: 15px;
+  padding: 10px 12px;
+  border-radius: 50%;
+}
+
+@media (max-width: 540px) {
+  .mainMenu {
+    display: none;
+  }
+
+  .active {
+    display: block;
+  }
+
+  .activeMenuButton {
+    display: block;
+  }
+
+  .mainMenu {
+    width: 90%;
+    bottom: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 25px 25px;
+  }
+  .crossButton {
+    display: block;
+  }
+}
