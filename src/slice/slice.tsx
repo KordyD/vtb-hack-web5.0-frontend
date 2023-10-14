@@ -98,15 +98,16 @@ const initialState: InitialState = {
         services: banksServices
     },
     itms: {
-        choosed: false,
-        filters: [],
-        services: []
-    }
+      chosen: false,
+      filters: [],
+      services: [],
+    },
   },
   tags: [],
   offices: {
-    offices: []
+    offices: [],
   },
+  chosenOffice: null,
 };
 
 export const mainMenuSlice = createSlice({
@@ -114,31 +115,53 @@ export const mainMenuSlice = createSlice({
   initialState: initialState,
   reducers: {
     toggleFilters: (state) => {
-        state.filters.opened = !state.filters.opened;
+      state.filters.opened = !state.filters.opened;
     },
 
     expandFilter: (state, action: PayloadAction<ExpandFilterAction>) => {
-        if (action.payload.isBanks) {
-            state.filters.banks.services = expandParticularService(state.filters.banks.services, action) 
-        } else {
-            state.filters.itms.services = expandParticularService(state.filters.banks.services, action)
-        }
+      if (action.payload.isBanks) {
+        state.filters.banks.services = expandParticularService(
+          state.filters.banks.services,
+          action
+        );
+      } else {
+        state.filters.itms.services = expandParticularService(
+          state.filters.banks.services,
+          action
+        );
+      }
     },
 
     switchOption: (state, action: PayloadAction<boolean>) => {
-        state.filters.banks.choosed = action.payload
-        state.filters.itms.choosed = !action.payload
+      state.filters.banks.chosen = action.payload;
+      state.filters.itms.chosen = !action.payload;
     },
 
     loadOffices: (state, action: PayloadAction<(Office | null)[]>) => {
-        if (!action.payload.some(item => item === null)) {
-            state.offices.offices = action.payload.map(office => ({
-                address: office!.address,
-                img: office!.img,
-                distance: office!.distance
-            }))
-        }
-        
+      if (!action.payload.some((item) => item === null)) {
+        state.offices.offices = action.payload.map((office) => ({
+          address: office!.address,
+          img: office!.img,
+          distance: office!.distance,
+          id: office!.id,
+        }));
+      }
+    },
+
+    setDistances: (
+      state,
+      action: PayloadAction<{ id: number; distance: number }>
+    ) => {
+      if (action.payload) {
+        state.offices.offices[action.payload.id].distance =
+          action.payload.distance;
+      }
+    },
+
+    chooseOffice: (state, action: PayloadAction<number>) => {
+      if (action.payload !== null) {
+        state.chosenOffice = action.payload;
+      }
     },
 
     setClientPosition: (state, action: PayloadAction<Geoposition>) => {

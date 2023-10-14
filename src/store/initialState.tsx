@@ -5,6 +5,7 @@ export interface InitialState {
     filters: FiltersState,
     tags: TagState,
     offices: OfficesState,
+  chosenOffice: number | null;
 }
 
 export interface Geoposition {
@@ -13,33 +14,29 @@ export interface Geoposition {
 }
 
 export enum Platform {
-    DESKTOP,
-    MOBILE
+  DESKTOP,
+  MOBILE,
 }
 
 export interface OfficesState {
-    offices: Office[]
+  offices: Office[];
 }
 
 export interface Office {
-    address: string;
-    img: string;
-    distance: number;
-  }
-
-export interface TagState {
-
+  address: string;
+  img: string;
+  distance: number;
+  id: number;
 }
 
+export interface TagState {}
 
-export interface SearchState {
-
-}
+export interface SearchState {}
 
 export interface FiltersState {
-    opened: boolean,
-    banks: Filter,
-    itms: Filter,
+  opened: boolean;
+  banks: Filter;
+  itms: Filter;
 }
 
 export interface SubItem {
@@ -53,6 +50,7 @@ export type FilterItem = {
     id: string,
 }
 
+export type FilterItem = {};
 
 export type ServiceItem = {
     name: string,
@@ -63,11 +61,9 @@ export type ServiceItem = {
 }
 
 export interface Filter {
-    choosed: boolean,
-    filters: FilterItem[],
-    services: ServiceItem[],
+  chosen: boolean;
+  filters: FilterItem[];
+  services: ServiceItem[];
 }
 
-
-
-export const MainMenuAction: string = "MainMenu";
+export const MainMenuAction: string = 'MainMenu';

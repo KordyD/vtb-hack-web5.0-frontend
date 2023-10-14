@@ -1,5 +1,5 @@
-import { useSelector } from "react-redux"
-import { RootState } from "../../store/store"
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store/store';
 import styles from './Filters.module.css';
 import { FiltersState } from "../../store/initialState"
 import { useDispatch } from "react-redux";
@@ -9,9 +9,9 @@ import { CheckBoxFilters } from "./CheckBoxFilters";
 import { ChoosenServices } from "../menu/ChoosenServices";
 
 export const Filters = () => {
-    const state: FiltersState = useSelector(
-        (state: RootState) => state.mainSlice.filters
-    );
+  const state: FiltersState = useSelector(
+    (state: RootState) => state.mainSlice.filters
+  );
 
     const dispatch = useDispatch();
 
@@ -50,8 +50,10 @@ export const Filters = () => {
                 {choosedServices && choosedServices.length > 0 && <ChoosenServices isBanks={isBanks(state)} services={choosedServices} />}
             </>)}
         </>
-    )
-}
+      )}
+    </>
+  );
+};
 
 const getVisibleServices = (state: FiltersState) => {
     if (state.banks.choosed) {

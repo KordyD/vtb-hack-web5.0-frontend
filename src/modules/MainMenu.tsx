@@ -28,16 +28,7 @@ export const MainMenu = () => {
     }}>
       <input />
       <Filters />
-      <ul className={styles.list}>
-        {offices.map((item, index) => (
-          <OfficeCard
-            img={icon}
-            address={item.address}
-            key={index}
-            distance={item.distance}
-          />
-        ))}
-      </ul>
+      <OfficeCardsMenu />
     </div>
   );
 };
