@@ -1,4 +1,4 @@
-import { MenuItem } from './menu/MainMenu';
+import { MenuItem } from './components/menu/MainMenu';
 import { Map } from './modules/Map';
 import { MainMenu } from './modules/MainMenu';
 import { useState } from 'react';

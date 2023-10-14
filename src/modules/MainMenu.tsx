@@ -1,5 +1,5 @@
 import styles from './MainMenu.module.css';
-import { OfficeCard } from '../components/OfficeCard';
+import { OfficeCard } from '../components/OfficeCard/OfficeCard';
 import data from '../utils/offices.json';
 import { Data } from './Router';
 import icon from '/VTB-map-icon.svg';
