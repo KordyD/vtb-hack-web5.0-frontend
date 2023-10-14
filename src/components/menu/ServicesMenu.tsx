@@ -12,7 +12,7 @@ export type MainMenuProps = {
 export function ServicesMenu ({ menuItems, isBanks}: MainMenuProps) {
     return (
         <div className="main_menu">
-            { menuItems.map((item, key) => (<ServiceItemComponent expanded={item.expanded} isBanks={isBanks} key={key} id={key} name={item.name} subItems={item.subItems}/>)) }
+            { menuItems.map((item, key) => (<ServiceItemComponent clentId={item.clentId} choosen={item.choosen} expanded={item.expanded} isBanks={isBanks} key={key} id={key} name={item.name} subItems={item.subItems}/>)) }
         </div>
     )
 }

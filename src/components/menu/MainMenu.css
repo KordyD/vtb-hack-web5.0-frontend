@@ -20,8 +20,17 @@
 }
 
 .menu_item {
-    font-family: VTBGroupUIWebBook;
     background-color: white;
+    color: black;
+    border-radius: 5px;
+    padding: 1em;
+    width: auto;
+    cursor: pointer;
+}
+
+.menu_item_choosen {
+    background-color: rgb(13, 105, 242);
+    color: white;
     border-radius: 5px;
     padding: 1em;
     width: auto;
@@ -32,16 +41,29 @@
     background-color: rgb(241, 242, 244);
 }
 
-.menu_sub_item {
-    font-family: VTBGroupUIWebBook;
-    background-color: white;
-    border-radius: 5px;
-    padding: 1em;
-    width: auto;
-    cursor: pointer;
+.service_tag {
+    border-radius: 30px;
+    background-color: rgb(241, 242, 244);
+    padding: 0.5em;
+    margin-top: 0.5em;
+    width: fit-content;
 }
 
-.menu_sub_item:hover {
-    background-color: rgb(241, 242, 244);
+.tag_close_icon {
+    display: inline-block;
+    border-radius: 30px;
+    margin-left: 0.3em;
+    margin-right: 0.1em;
+    width: 1.5em;
+    height: 1.5em;
+    text-align: center;
+    cursor: pointer;
+}
+.tag_close_icon:hover {
+    background-color: rgb(184, 184, 184);
+}
+
+.tags_container {
+    margin-top: 1em;
 }
 

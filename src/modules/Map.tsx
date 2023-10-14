@@ -11,15 +11,19 @@ import { icon } from 'leaflet';
 import 'leaflet-routing-machine';
 import 'lrm-graphhopper';
 import { Data } from './Router';
-import { useState, useEffect } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store/store';
 import { useDispatch } from 'react-redux';
 import iconVtb from '/VTB-map-icon.svg';
-import { loadOffices } from '../slice/slice';
+import { loadOffices, setClientPosition } from '../slice/slice';
+import { Geoposition, Office } from "../store/initialState"
+import { debounce, throttle } from 'lodash';
+import { Subject } from 'rxjs';
 import { createCustomIcon } from '../utils/createCustomIcon';
 import { CenterMapOnPoint } from '../components/helpers/CenterMapOnPoint';
 import { CreateOffice } from '../components/helpers/CreateOffice';
+
 
 const officeData = data as Data[];
 const markerIcon = icon({
@@ -28,53 +32,63 @@ const markerIcon = icon({
   iconAnchor: [19, 69],
 });
 
+const locationSubject: Subject<number[]> = new Subject<number[]>();
+
+navigator.geolocation.watchPosition(
+  (position) => {
+    const latitude = position.coords.latitude;
+    const longitude = position.coords.longitude;
+    console.log("new position")
+    locationSubject.next([latitude, longitude])
+  },
+  (error) => {
+    locationSubject.next([55.7522, 37.6156])
+  },
+);
+
+// TODO: Подключить Redux. Отрисовывать объекты в списке только в рамках карты.
+// FIXME: Причесать код ниже, выглядит плохо
+// Краткая задача кода ниже: брать геолокацию юзера и писать дистанцию от отделений до него
+
 export const Map = () => {
-  const offices = useSelector(
-    (state: RootState) => state.mainSlice.offices.offices
-  );
+  const mapRef = useRef(null);
+
+  const coords: Geoposition = useSelector(
+    (state: RootState) => state.mainSlice.clientGeoposition
+  )
+
+  const dispatch = useDispatch()
 
   const chosenOffice = useSelector(
     (state: RootState) => state.mainSlice.chosenOffice
-  );
-
-  const dispatch = useDispatch();
-
-  const [coords, setCoords] = useState<number[]>([55.7522, 37.6156]);
+  );  
 
   useEffect(() => {
-    dispatch(
-      loadOffices(
-        officeData.map((item, index) => ({
+    locationSubject.subscribe(([latitude, longitude]) => {
+      dispatch(setClientPosition({latitude, longitude}))
+      dispatch(loadOffices(officeData.map((item, index) => ({
           address: item!.address,
           img: iconVtb,
           distance: item!.distance,
           id: index,
-        }))
-      )
-    );
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const latitude = position.coords.latitude;
-        const longitude = position.coords.longitude;
-        setCoords([latitude, longitude]);
-      },
-      (error) => {
-        setCoords([55.7522, 37.6156]);
-      }
-    );
-  }, []);
+        }))));
+    })
+  })
+
+
+  
 
   return (
     <>
       <MapContainer
         style={{ height: '100vh', zIndex: '0' }}
-        center={[coords[0], coords[1]]}
+        center={[coords.latitude, coords.longitude]}
         zoom={9}
         zoomControl={false}
       >
         <TileLayer url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png' />
         <ZoomControl position='bottomright' />
-        <Marker position={[coords[0], coords[1]]} />
+        <Marker position={[coords.latitude, coords.longitude]} />
         <MarkerClusterGroup
           iconCreateFunction={createCustomIcon}
           showCoverageOnHover={false}
@@ -88,12 +102,12 @@ export const Map = () => {
             >
               <CenterMapOnPoint
                 chosenOffice={chosenOffice}
-                coords={coords}
+                coords={[coords.latitude, coords.longitude]}
                 officeData={officeData}
               />
               <CreateOffice
                 coord1={[item.latitude, item.longitude]}
-                coord2={[coords[0], coords[1]]}
+                coord2={[coords.latitude, coords.longitude]}
                 id={index}
               />
               <Popup>{index}</Popup>
