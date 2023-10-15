@@ -30,9 +30,9 @@ export const MainMenu = () => {
 
   const menuWindow: React.RefObject<HTMLInputElement> = createRef();
 
-  const [menu, setMenu] = useState(false);
-
   dispatch(getServicesAsync());
+
+  const [menu, setMenu] = useState(false);
 
   return (
     <>

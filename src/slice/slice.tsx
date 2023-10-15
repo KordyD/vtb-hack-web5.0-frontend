@@ -303,6 +303,9 @@ export const mainMenuSlice = createSlice({
       )
       .addCase(getServicesAsync.rejected, (state, action) => {
         state.filters.banks.services = banksServices;
+      })
+      .addCase(getServicesAsync.pending, (state, action) => {
+        state.filters.banks.services = banksServices;
       });
   },
 });
