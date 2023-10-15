@@ -4,29 +4,24 @@ import {
   Marker,
   Popup,
   ZoomControl,
-  useMap,
 } from 'react-leaflet';
-import data from '../utils/offices.json';
 import MarkerClusterGroup from 'react-leaflet-cluster';
 import { Control, icon } from 'leaflet';
 import 'leaflet-routing-machine';
 import 'lrm-graphhopper';
-import { Data } from './Router';
-import { useState, useRef, useEffect, useMemo } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store/store';
 import { useDispatch } from 'react-redux';
 import iconVtb from '/VTB-map-icon.svg';
-import { loadOffices, setClientPosition, setDistances } from '../slice/slice';
+import { setClientPosition, setDistances } from '../slice/slice';
 import { Geoposition, Office } from '../store/initialState';
 import { createCustomIcon } from '../utils/createCustomIcon';
 import { CenterMapOnPoint } from '../components/helpers/CenterMapOnPoint';
-// import { CreateOffice } from '../components/helpers/CreateOffice';
 import { LatLng } from 'leaflet';
 import { Routing } from 'leaflet';
 import './Map.css';
 
-const officeData = data as Data[];
 const markerIcon = icon({
   iconUrl: '/VTB-map-icon.svg',
   iconSize: [38, 95],
@@ -41,6 +36,10 @@ export const Map = () => {
   const mapRef = useRef(null);
 
   const [routing, setRouting] = useState<Control | null>();
+
+  const officesData: Office[] = useSelector(
+    (state: RootState) => state.mainSlice.offices.offices
+  );
 
   const routerHandler = (departure: number[], destination: number[]) => {
     const map = mapRef.current;
@@ -67,6 +66,35 @@ export const Map = () => {
     route.addTo(map);
   };
 
+  const countDistance = (item: Office, coord1: LatLng) => {
+    const map = useRef();
+    const dispatch = useDispatch();
+
+    // if (!coord1) {
+    //   const office: Office = {
+    //     address: item.address,
+    //     img: iconVtb,
+    //     distance: Math.round(item.distance) / 1000,
+    //     id: item.id,
+    //     status: item.status,
+    //     services: item.services,
+    //     charts: item.charts,
+    //     worksTime: item.worksTime,
+    //   };
+    //   return office;
+    // }
+
+    // if (!map) {
+    //   return null;
+    // }
+
+    const distance: number =
+      Math.round(map.distance(coord1, latLng(item.latitude, item.longitude))) /
+      1000;
+
+    dispatch(setDistances({ id: item.id, distance: distance }));
+  };
+
   const coords: Geoposition = useSelector(
     (state: RootState) => state.mainSlice.clientGeoposition
   );
@@ -81,40 +109,9 @@ export const Map = () => {
     return new LatLng(latitude, longitude);
   };
 
-  const createOffice = (id: number, item: Data, coord1?: LatLng) => {
-    const map = mapRef.current;
-
-    if (!coord1) {
-      const office: Office = {
-        address: item.address,
-        img: iconVtb,
-        distance: Math.round(item.distance) / 1000,
-        id,
-      };
-      return office;
-    }
-
-    if (!map) {
-      return null;
-    }
-
-    const distance: number =
-      Math.round(map.distance(coord1, latLng(item.latitude, item.longitude))) /
-      1000;
-
-    const office: Office = {
-      address: item.address,
-      img: iconVtb,
-      distance: distance,
-      id,
-    };
-
-    return office;
-  };
-
   useEffect(() => {
-    dispatch(
-      loadOffices(officeData.map((item, index) => createOffice(index, item)))
+    officesData.forEach((item) =>
+      countDistance(item, latLng(coords.latitude, coords.longitude))
     );
 
     navigator.geolocation.getCurrentPosition(
@@ -122,30 +119,38 @@ export const Map = () => {
         const latitude = position.coords.latitude;
         const longitude = position.coords.longitude;
         dispatch(setClientPosition({ latitude, longitude }));
-        dispatch(
-          loadOffices(
-            officeData.map((item, index) =>
-              createOffice(index, item, latLng(latitude, longitude))
-            )
-          )
+        officesData.forEach((item) =>
+          countDistance(item, latLng(coords.latitude, coords.longitude))
         );
+
+        // dispatch(
+        //   loadOffices(
+        //     officeData.map((item, index) =>
+        //       createOffice(index, item, latLng(latitude, longitude))
+        //     )
+        //   )
+        // );
       },
       (error) => {
         dispatch(setClientPosition({ latitude: 55.7522, longitude: 37.6156 }));
-        dispatch(
-          loadOffices(
-            officeData.map((item, index) =>
-              createOffice(
-                index,
-                item,
-                latLng(coords.latitude, coords.longitude)
-              )
-            )
-          )
+        officesData.forEach((item) =>
+          countDistance(item, latLng(coords.latitude, coords.longitude))
         );
+
+        // dispatch(
+        //   loadOffices(
+        //     officeData.map((item, index) =>
+        //       createOffice(
+        //         index,
+        //         item,
+        //         latLng(coords.latitude, coords.longitude)
+        //       )
+        //     )
+        //   )
+        // );
       }
     );
-  }, [mapRef]);
+  }, []);
 
   return (
     <>
@@ -164,7 +169,7 @@ export const Map = () => {
           showCoverageOnHover={false}
           chunkedLoading
         >
-          {officeData.map((item, index) => (
+          {officesData.map((item, index) => (
             <Marker
               key={index}
               position={[item.latitude, item.longitude]}
@@ -173,7 +178,7 @@ export const Map = () => {
               <CenterMapOnPoint
                 chosenOffice={chosenOffice}
                 coords={[coords.latitude, coords.longitude]}
-                officeData={officeData}
+                officeData={officesData}
               />
               <Popup>
                 <button
@@ -191,7 +196,6 @@ export const Map = () => {
             </Marker>
           ))}
         </MarkerClusterGroup>
-        {/* <RouterComponent data={offices} /> */}
       </MapContainer>
     </>
   );

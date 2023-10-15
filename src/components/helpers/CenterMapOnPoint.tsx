@@ -1,5 +1,6 @@
 import { useMap } from 'react-leaflet';
-import { Data } from '../../modules/Router';
+import { Office } from '../../store/initialState';
+import { latLng } from 'leaflet';
 
 export const CenterMapOnPoint = ({
   coords,
@@ -8,7 +9,7 @@ export const CenterMapOnPoint = ({
 }: {
   coords: number[];
   chosenOffice: number | null;
-  officeData: Data[];
+  officeData: Office[];
 }) => {
   let viewCoords = [];
   if (chosenOffice === null) {
@@ -20,6 +21,6 @@ export const CenterMapOnPoint = ({
     ];
   }
   const map = useMap();
-  map.setView(viewCoords, 13);
+  map.setView(latLng(viewCoords[0], viewCoords[1]), 18);
   return null;
 };

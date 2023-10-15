@@ -8,6 +8,10 @@ export interface InitialState {
   tags: TagState;
   offices: OfficesState;
   chosenOffice: number | null;
+  loading: {
+    loadingServices: boolean;
+    loadingOffices: boolean;
+  };
 }
 
 export interface Geoposition {
@@ -24,11 +28,37 @@ export interface OfficesState {
   offices: Office[];
 }
 
+export interface Service {
+  serviceId: number;
+  serviceName: string;
+}
+
 export interface Office {
-  address: string;
-  img: string;
-  distance: number;
   id: number;
+  salePointName: string;
+  address: string;
+  latitude: number;
+  longitude: number;
+  status: boolean;
+  officeType: string;
+  metroStation: string;
+  services: [Service];
+  charts: [
+    {
+      weeksDay: string;
+      chartByTime: number[];
+    }
+  ];
+  worksTime: [
+    {
+      weeksDay: string;
+      workTimeStart: string;
+      workTimeEnd: string;
+      isLegal: boolean;
+    }
+  ];
+  img?: string;
+  distance?: number;
 }
 
 export interface TagState {}

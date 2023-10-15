@@ -1,4 +1,5 @@
-import { getServices } from '../API/api';
+import { getOffices, getServices } from '../API/api';
+import iconVtb from '/VTB-map-icon.svg';
 import {
   ChooseServiceAction,
   ExpandFilterAction,
@@ -11,6 +12,7 @@ import {
   ServiceItem,
   Geoposition,
   TipItem,
+  Service,
 } from '../store/initialState';
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 
@@ -121,20 +123,24 @@ const banksServices: ServiceItem[] = [
   },
 ];
 
-interface serviceResponse {
-  serviceId: number;
-  serviceName: string;
-}
-
 export const getServicesAsync = createAsyncThunk(
   'MainMenuAction/getServices',
   getServices
+);
+
+export const getOfficesAsync = createAsyncThunk(
+  'MainMenuAction/getOffices',
+  getOffices
 );
 
 const initialState: InitialState = {
   clientGeoposition: {
     latitude: 55.7522,
     longitude: 37.6156,
+  },
+  loading: {
+    loadingServices: false,
+    loadingOffices: false,
   },
   platform: Platform.DESKTOP,
   search: {},
@@ -154,7 +160,7 @@ const initialState: InitialState = {
           checked: false,
         },
       ],
-      services: [], //Обновить при загрузке страницы
+      services: [],
     },
     itms: {
       chosen: false,
@@ -198,24 +204,26 @@ export const mainMenuSlice = createSlice({
       state.filters.itms.chosen = !action.payload;
     },
 
-    loadOffices: (state, action: PayloadAction<(Office | null)[]>) => {
-      if (!action.payload.some((item) => item === null)) {
-        state.offices.offices = action.payload.map((office) => ({
-          address: office!.address,
-          img: office!.img,
-          distance: office!.distance,
-          id: office!.id,
-        }));
-      }
-    },
+    // loadOffices: (state, action: PayloadAction<(Office | null)[]>) => {
+    //   if (!action.payload.some((item) => item === null)) {
+    //     state.offices.offices = action.payload.map((office) => ({
+    //       address: office!.address,
+    //       img: office!.img,
+    //       distance: office!.distance,
+    //       id: office!.id,
+    //     }));
+    //   }
+    // },
 
     setDistances: (
       state,
       action: PayloadAction<{ id: number; distance: number }>
     ) => {
       if (action.payload) {
-        state.offices.offices[action.payload.id].distance =
-          action.payload.distance;
+        state.offices.offices;
+        state.offices.offices.find(
+          (item) => item.id === action.payload.id
+        )!.distance = action.payload.distance;
       }
     },
 
@@ -286,32 +294,63 @@ export const mainMenuSlice = createSlice({
     builder
       .addCase(
         getServicesAsync.fulfilled,
-        (state, action: PayloadAction<serviceResponse[]>) => {
-          state.filters.banks.services = action.payload.map(
-            (item: serviceResponse) => {
-              return {
-                clentId: 'PF',
-                name: item.serviceName,
-                chosen: false,
-                expanded: false,
-                subItems: [],
-                serviceId: item.serviceId,
-              };
-            }
-          );
+        (state, action: PayloadAction<Service[]>) => {
+          state.filters.banks.services = action.payload.map((item: Service) => {
+            return {
+              clentId: 'PF',
+              name: item.serviceName,
+              chosen: false,
+              expanded: false,
+              subItems: [],
+              serviceId: item.serviceId,
+            };
+          });
+          state.loading.loadingServices = false;
         }
       )
       .addCase(getServicesAsync.rejected, (state, action) => {
         state.filters.banks.services = banksServices;
+        state.loading.loadingServices = false;
+      })
+
+      .addCase(getServicesAsync.pending, (state, action) => {
+        state.loading.loadingServices = true;
       });
-    // .addCase(getServicesAsync.pending, (state, action) => {
-    //   state.filters.banks.services = banksServices;
-    // });
+
+    builder
+      .addCase(
+        getOfficesAsync.fulfilled,
+        (state, action: PayloadAction<Office[]>) => {
+          state.offices.offices = action.payload.map((item) => {
+            return {
+              address: item.address,
+              charts: item.charts,
+              id: item.id,
+              latitude: item.latitude,
+              longitude: item.longitude,
+              metroStation: item.metroStation,
+              officeType: item.officeType,
+              salePointName: item.salePointName,
+              services: item.services,
+              status: item.status,
+              worksTime: item.worksTime,
+              img: iconVtb,
+            };
+          });
+          state.loading.loadingOffices = false;
+        }
+      )
+      .addCase(getOfficesAsync.rejected, (state, action) => {
+        state.loading.loadingOffices = false;
+      })
+      .addCase(getOfficesAsync.pending, (state, action) => {
+        state.loading.loadingOffices = true;
+      });
   },
 });
 export const {
   toggleFilters,
-  loadOffices,
+  // loadOffices,
   expandFilter,
   switchOption,
   setClientPosition,

@@ -41,6 +41,8 @@ export const MainMenu = () => {
 
   const chosenServices = getChosenServices(state);
 
+  const loading = useSelector((state: RootState) => state.mainSlice.loading);
+
   const [menu, setMenu] = useState(false);
 
   return (
@@ -71,11 +73,12 @@ export const MainMenu = () => {
           </button>
         </div>
         {tips.length > 0 && <InputTips inputTips={tips} />}
-        <Filters />
+        {loading.loadingServices ? <h2>Loading...</h2> : <Filters />}
+
         {chosenServices && chosenServices.length > 0 && (
           <ChosenServices isBanks={isBanks(state)} services={chosenServices} />
         )}
-        <OfficeCardsMenu />
+        {loading.loadingOffices ? <h2>Loading...</h2> : <OfficeCardsMenu />}
       </div>
     </>
   );

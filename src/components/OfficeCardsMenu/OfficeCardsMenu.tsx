@@ -19,12 +19,12 @@ export const OfficeCardsMenu = () => {
 
   return (
     <ul className={styles.list}>
-      {offices.map((item, index) => (
+      {offices.map((item) => (
         <OfficeCard
           img={icon}
           address={item.address}
-          key={index}
-          id={index}
+          key={item.id}
+          id={item.id}
           distance={item.distance}
           handleClick={getOfficeMark}
         />

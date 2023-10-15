@@ -3,7 +3,7 @@ import styles from './OfficeCard.module.css';
 interface OfficeCardProps {
   address: string;
   img: string;
-  distance: number;
+  distance?: number;
   id: number;
   handleClick: (id: number) => void;
 }

@@ -5,3 +5,9 @@ export const getServices = async () => {
   const data = await response.json();
   return data;
 };
+
+export const getOffices = async () => {
+  const response = await fetch(`${url}offices`);
+  const data = await response.json();
+  return data;
+};
