@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux';
 import { setMainInput, setTips } from '../slice/slice';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store/store';
+import { ServiceItem, TipItem } from '../store/initialState';
 
 export const MainInput = () => {
   const dispatch = useDispatch();
@@ -12,15 +13,38 @@ export const MainInput = () => {
     (state: RootState) => state.mainSlice.mainInputValue
   );
 
+  const services: ServiceItem[] = useSelector(
+    (state: RootState) => state.mainSlice.filters.banks.services
+  );
+
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     dispatch(setMainInput(value));
-    dispatch(
-      setTips([
-        { itemName: 'Кредиты', isBanks: true },
-        { itemName: 'Кредиты', subItemName: 'Экспресс кредит', isBanks: true },
-      ])
-    );
+    if (
+      services.find((service) =>
+        service.name.toLowerCase().includes(value.toLowerCase())
+      )
+    ) {
+      dispatch(
+        setTips(
+          services
+            .filter((service) =>
+              service.name.toLowerCase().includes(value.toLowerCase())
+            )
+            .map((service) => {
+              const tip: TipItem = { itemName: service.name, isBanks: true };
+              return tip;
+            })
+
+          // { itemName: 'Кредиты', isBanks: true },
+          // {
+          //   itemName: 'Кредиты',
+          //   subItemName: 'Экспресс кредит',
+          //   isBanks: true,
+          // },
+        )
+      );
+    }
   };
 
   const debouncedInputChange = debounce(handleInputChange, 500);

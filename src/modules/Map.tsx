@@ -137,8 +137,8 @@ export const Map = () => {
             officeData.map((item, index) =>
               createOffice(
                 index,
-                latLng(coords.latitude, coords.longitude),
-                item
+                item,
+                latLng(coords.latitude, coords.longitude)
               )
             )
           )

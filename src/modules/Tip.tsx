@@ -8,22 +8,16 @@ interface TipProps {
   subItemName?: string;
 }
 
-export const Tip = ({
-  itemName,
-  subItemName,
-  isBanks,
-}: TipProps) => {
+export const Tip = ({ itemName, subItemName, isBanks }: TipProps) => {
   const dispatch = useDispatch();
   return (
-    <div className={styles.tip} onClick={() => {
-        dispatch(
-            chooseItem({ isBanks, itemName, subItemName, chosen: true })
-          )
-          dispatch(
-              setTips([])
-          )
-    }
-      }>
+    <div
+      className={styles.tip}
+      onClick={() => {
+        dispatch(chooseItem({ isBanks, itemName, subItemName, chosen: true }));
+        dispatch(setTips([]));
+      }}
+    >
       {subItemName ? subItemName : itemName}
     </div>
   );

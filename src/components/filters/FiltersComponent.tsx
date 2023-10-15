@@ -12,6 +12,12 @@ import {
 import { ServicesMenu } from '../menu/ServicesMenu';
 import { CheckBoxFilters } from './CheckBoxFilters';
 import { ChosenServices } from '../menu/ChoosenServices';
+import {
+  getCheckBoxes,
+  getChosenServices,
+  getVisibleServices,
+  isBanks,
+} from '../helpers/GettersFunctions';
 
 export const Filters = () => {
   const state: FiltersState = useSelector(
@@ -77,43 +83,8 @@ export const Filters = () => {
               menuItems={visibleServices}
             />
           )}
-          {chosenServices && chosenServices.length > 0 && (
-            <ChosenServices
-              isBanks={isBanks(state)}
-              services={chosenServices}
-            />
-          )}
         </>
       )}
     </>
   );
 };
-
-const getVisibleServices = (state: FiltersState) => {
-  if (state.banks.chosen) {
-    return state.banks.services.filter(
-      (service) => service.clentId === getChosenCheckBox(state)
-    );
-  } else {
-    return state.itms.services;
-  }
-};
-
-const getChosenServices = (state: FiltersState) => {
-  if (isBanks(state)) {
-    return state.banks.services.filter((service) => service.chosen);
-  }
-};
-
-const getChosenCheckBox = (state: FiltersState) =>
-  state.banks.filters.find((filter) => filter.checked)?.id;
-
-const getCheckBoxes = (state: FiltersState) => {
-  if (isBanks(state)) {
-    return state.banks.filters;
-  }
-
-  return [];
-};
-
-const isBanks = (state: FiltersState) => state.banks.chosen;
