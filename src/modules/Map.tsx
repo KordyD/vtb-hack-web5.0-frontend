@@ -81,15 +81,26 @@ export const Map = () => {
     return new LatLng(latitude, longitude);
   };
 
-  const createOffice = (id: number, coord1: LatLng, item: Data) => {
+  const createOffice = (id: number, item: Data, coord1?: LatLng) => {
     const map = mapRef.current;
+
+    if (!coord1) {
+      const office: Office = {
+        address: item.address,
+        img: iconVtb,
+        distance: Math.round(item.distance) / 1000,
+        id,
+      };
+      return office;
+    }
+
     if (!map) {
       return null;
     }
-    const distance: number = map.distance(
-      coord1,
-      latLng(item.latitude, item.longitude)
-    );
+
+    const distance: number =
+      Math.round(map.distance(coord1, latLng(item.latitude, item.longitude))) /
+      1000;
 
     const office: Office = {
       address: item.address,
@@ -102,6 +113,10 @@ export const Map = () => {
   };
 
   useEffect(() => {
+    dispatch(
+      loadOffices(officeData.map((item, index) => createOffice(index, item)))
+    );
+
     navigator.geolocation.getCurrentPosition(
       (position) => {
         const latitude = position.coords.latitude;
@@ -110,7 +125,7 @@ export const Map = () => {
         dispatch(
           loadOffices(
             officeData.map((item, index) =>
-              createOffice(index, latLng(latitude, longitude), item)
+              createOffice(index, item, latLng(latitude, longitude))
             )
           )
         );
@@ -130,7 +145,7 @@ export const Map = () => {
         );
       }
     );
-  });
+  }, [mapRef]);
 
   return (
     <>
