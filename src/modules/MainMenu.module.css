@@ -1,7 +1,7 @@
 .mainMenu {
   z-index: 1;
   position: absolute;
-  width: 400px;
+  width: 450px;
   height: 95%;
   background-color: white;
   border-radius: 20px;
@@ -10,13 +10,135 @@
   margin-top: auto;
   margin-bottom: auto;
   margin-left: 30px;
-  padding: 25px 35px;
+  padding: 25px 25px;
   overflow-y: scroll;
 }
 
-.list {
+.input {
+  position: relative;
+  width: 100%;
+  z-index: 3;
+  border-radius: 10px;
+  height: 2.5em;
+  display: block;
+  padding: 0.35em;
+  background-color: rgb(241, 242, 244);
+  outline: none;
+  border: none;
+  font-family: 'VTBGroupUIWebBook';
+}
+
+.tips {
+  width: auto;
+  background-color: white;
+  z-index: 2;
+  height: 15em;
+  border-radius: 10px;
+  border: 1px solid rgb(13, 105, 242);
+  padding-top: 1em;
+  margin-top: -1em;
+  overflow-y: scroll;
+}
+
+.tip {
+  border-radius: 30px;
+  background-color: rgb(241, 242, 244);
+  padding: 0.5em;
+  margin-top: 0.5em;
+  margin-left: 0.5em;
+  width: fit-content;
+}
+
+.tip:hover {
+  background-color: rgb(184, 184, 184);
+}
+
+.input {
+  position: relative;
+  width: 100%;
+  z-index: 3;
+  border-radius: 10px;
+  height: 2.5em;
+  display: block;
+  padding: 0.35em;
+  background-color: rgb(241, 242, 244);
+  outline: none;
+  border: none;
+  font-family: 'VTBGroupUIWebBook';
+}
+
+.tips {
+  width: auto;
+  background-color: white;
+  z-index: 2;
+  height: 15em;
+  border-radius: 10px;
+  border: 1px solid rgb(13, 105, 242);
+  padding-top: 1em;
+  margin-top: -1em;
+}
+
+.tip {
+  border-radius: 30px;
+  background-color: rgb(241, 242, 244);
+  padding: 0.5em;
+  margin-top: 0.5em;
+  margin-left: 0.5em;
+  width: fit-content;
+}
+
+.tip:hover {
+  background-color: rgb(184, 184, 184);
+}
+
+.wrapper {
   display: flex;
-  flex-direction: column;
-  gap: 15px;
-  margin-top: 25px;
+  gap: 10px;
+}
+
+.crossButton,
+.menuButton {
+  display: none;
+  background-color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.menuButton {
+  position: absolute;
+  z-index: 2;
+  top: 15px;
+  left: 15px;
+  padding: 10px 12px;
+  border-radius: 50%;
+}
+
+@media (max-width: 540px) {
+  .mainMenu {
+    display: none;
+  }
+
+  .active {
+    display: block;
+  }
+
+  .activeMenuButton {
+    display: block;
+  }
+
+  .mainMenu {
+    width: 90%;
+    bottom: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 25px 25px;
+  }
+  .crossButton {
+    display: block;
+  }
 }

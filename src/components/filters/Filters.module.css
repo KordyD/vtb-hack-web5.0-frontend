@@ -1,0 +1,79 @@
+.filterCard {
+  background-color: white;
+  border: 1px solid rgb(13, 105, 242);
+  font-size: 20px;
+  text-align: center;
+  border-radius: 10px;
+  width: auto;
+  padding: 0.5em;
+  margin-top: 0.5em;
+  cursor: pointer;
+}
+
+.optionCard {
+  background-color: white;
+  border: 1px solid rgb(13, 105, 242);
+  font-size: 14px;
+  text-align: center;
+  border-radius: 30px;
+  width: auto;
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+  padding-right: 1em;
+  padding-left: 1em;
+  cursor: pointer;
+  margin-right: 2em;
+}
+
+.optionCardChosen {
+  background-color: rgb(13, 105, 242);
+  color: white;
+  font-size: 14px;
+  text-align: center;
+  border-radius: 30px;
+  width: auto;
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+  padding-right: 1em;
+  padding-left: 1em;
+  cursor: pointer;
+  margin-right: 2em;
+}
+
+.optionCard:hover {
+  background-color: rgb(241, 242, 244);
+}
+
+.filterCard:hover {
+  background-color: rgb(241, 242, 244);
+}
+
+.checkBoxesContainer {
+  margin-top: 2em;
+}
+
+.input {
+  vertical-align: middle;
+  float: right;
+  width: 1.25em;
+  height: 1.25em;
+}
+
+.label {
+  color: rgb(43, 49, 59);
+  overflow: hidden;
+  width: fit-content;
+}
+
+.hr {
+  margin-top: 2em;
+  border-right: none;
+  border-bottom: none;
+  border-left: none;
+  border-image: initial;
+  border-top: 1px solid rgb(226, 229, 233);
+}
+
+.inputWrapper {
+  margin-top: 2em;
+}

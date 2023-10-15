@@ -1,0 +1,12 @@
+.leaflet-routing-container {
+  display: none;
+}
+
+.popup-routing-button {
+  cursor: pointer;
+  background-color: white;
+  font-family: VTBGroupUIWebBook;
+  padding: 5px;
+  border-radius: 5px;
+  border: 2px solid #0a2973;
+}

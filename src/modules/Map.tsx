@@ -4,128 +4,194 @@ import {
   Marker,
   Popup,
   ZoomControl,
-  useMap,
 } from 'react-leaflet';
-import data from '../utils/offices.json';
 import MarkerClusterGroup from 'react-leaflet-cluster';
-import { MarkerCluster, divIcon, icon, point, LatLng, latLng } from 'leaflet';
+import { Control, icon } from 'leaflet';
 import 'leaflet-routing-machine';
 import 'lrm-graphhopper';
-import { RouterComponent } from './Router';
-import { Data } from './Router';
-import { useState, useRef, useMemo } from 'react';
+import { useState, useRef, useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import { RootState } from '../store/store';
+import { useDispatch } from 'react-redux';
+import iconVtb from '/VTB-map-icon.svg';
+import { setClientPosition, setDistances } from '../slice/slice';
+import { Geoposition, Office } from '../store/initialState';
+import { createCustomIcon } from '../utils/createCustomIcon';
+import { CenterMapOnPoint } from '../components/helpers/CenterMapOnPoint';
+import { LatLng } from 'leaflet';
+import { Routing } from 'leaflet';
+import './Map.css';
 
-const offices = data as Data[];
 const markerIcon = icon({
   iconUrl: '/VTB-map-icon.svg',
   iconSize: [38, 95],
   iconAnchor: [19, 69],
 });
 
-const createCustomIcon = (cluster: MarkerCluster) => {
-  return divIcon({
-    html: `<div
-        style="
-          border-radius: 50%;
-          background-color: white;
-          border-width: 2px;
-          border-color: #0A2973;
-          border-style: solid;
-          padding: 15px;
-          width: 20px;
-          height: 20px;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          font-family: VTBGroupUIWebBook;
-          font-weight: bold;
-          "
-        
-      >
-      <div>${cluster.getChildCount()}</div>
-      </div>`,
-
-    className: 'custom-marker-cluster',
-    iconSize: point(33, 33, true),
-  });
-};
-
-interface MapProps {
-  distancesHandler: (distances: number[]) => void;
-}
-
 // TODO: Подключить Redux. Отрисовывать объекты в списке только в рамках карты.
 // FIXME: Причесать код ниже, выглядит плохо
 // Краткая задача кода ниже: брать геолокацию юзера и писать дистанцию от отделений до него
 
-export const Map = ({ distancesHandler }: MapProps) => {
+export const Map = () => {
   const mapRef = useRef(null);
 
-  const distances: number[] = [];
+  const [routing, setRouting] = useState<Control | null>();
 
-  const DistanceGetter = (coord1: LatLng, coord2: LatLng) => {
+  const officesData: Office[] = useSelector(
+    (state: RootState) => state.mainSlice.offices.offices
+  );
+
+  const routerHandler = (departure: number[], destination: number[]) => {
     const map = mapRef.current;
     if (!map) {
       return null;
     }
-    const distance = map.distance(coord1, coord2);
-
-    distances.push(distance);
-
-    return null;
+    if (routing) {
+      routing.remove();
+    }
+    const route = Routing.control({
+      waypoints: [
+        latLng(departure[0], departure[1]),
+        latLng(destination[0], destination[1]),
+      ],
+      createMarker: function () {
+        return null;
+      },
+      routeWhileDragging: false,
+      show: false,
+      addWaypoints: false,
+      router: Routing.graphHopper('674c54dd-0cec-4e17-a404-31c248a4bdf8'),
+    });
+    setRouting(route);
+    route.addTo(map);
   };
 
-  const [coords, setCoords] = useState<number[]>([55.7522, 37.6156]);
+  const countDistance = (item: Office, coord1: LatLng) => {
+    const map = useRef();
+    const dispatch = useDispatch();
 
-  navigator.geolocation.watchPosition(
-    (position) => {
-      const latitude = position.coords.latitude;
-      const longitude = position.coords.longitude;
-      setCoords([latitude, longitude]);
-      offices.forEach((item) =>
-        DistanceGetter(
-          latLng(coords[0], coords[1]),
-          latLng(item.latitude, item.longitude)
-        )
-      );
-      distancesHandler(distances);
-    },
-    (error) => {
-      setCoords([55.7522, 37.6156]);
-    }
+    // if (!coord1) {
+    //   const office: Office = {
+    //     address: item.address,
+    //     img: iconVtb,
+    //     distance: Math.round(item.distance) / 1000,
+    //     id: item.id,
+    //     status: item.status,
+    //     services: item.services,
+    //     charts: item.charts,
+    //     worksTime: item.worksTime,
+    //   };
+    //   return office;
+    // }
+
+    // if (!map) {
+    //   return null;
+    // }
+
+    const distance: number =
+      Math.round(map.distance(coord1, latLng(item.latitude, item.longitude))) /
+      1000;
+
+    dispatch(setDistances({ id: item.id, distance: distance }));
+  };
+
+  const coords: Geoposition = useSelector(
+    (state: RootState) => state.mainSlice.clientGeoposition
   );
+
+  const dispatch = useDispatch();
+
+  const chosenOffice = useSelector(
+    (state: RootState) => state.mainSlice.chosenOffice
+  );
+
+  const latLng = (latitude: number, longitude: number) => {
+    return new LatLng(latitude, longitude);
+  };
+
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const latitude = position.coords.latitude;
+        const longitude = position.coords.longitude;
+        dispatch(setClientPosition({ latitude, longitude }));
+        // officesData.forEach((item) =>
+        //   countDistance(item, latLng(coords.latitude, coords.longitude))
+        // );
+
+        // dispatch(
+        //   loadOffices(
+        //     officeData.map((item, index) =>
+        //       createOffice(index, item, latLng(latitude, longitude))
+        //     )
+        //   )
+        // );
+      },
+      (error) => {
+        dispatch(setClientPosition({ latitude: 55.7522, longitude: 37.6156 }));
+        // officesData.forEach((item) =>
+        //   countDistance(item, latLng(coords.latitude, coords.longitude))
+        // );
+
+        // dispatch(
+        //   loadOffices(
+        //     officeData.map((item, index) =>
+        //       createOffice(
+        //         index,
+        //         item,
+        //         latLng(coords.latitude, coords.longitude)
+        //       )
+        //     )
+        //   )
+        // );
+      }
+    );
+  }, []);
 
   return (
     <>
       <MapContainer
         style={{ height: '100vh', zIndex: '0' }}
-        center={[coords[0], coords[1]]}
+        center={[coords.latitude, coords.longitude]}
         zoom={9}
         zoomControl={false}
         ref={mapRef}
       >
         <TileLayer url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png' />
         <ZoomControl position='bottomright' />
-        <Marker position={[coords[0], coords[1]]} />
+        <Marker position={[coords.latitude, coords.longitude]} />
         <MarkerClusterGroup
           iconCreateFunction={createCustomIcon}
           showCoverageOnHover={false}
-          // polygonOptions={{ color: 'none' }}
           chunkedLoading
         >
-          {offices.map((item, index) => (
+          {officesData.map((item, index) => (
             <Marker
               key={index}
               position={[item.latitude, item.longitude]}
               icon={markerIcon}
             >
-              <Popup>{index}</Popup>
+              <CenterMapOnPoint
+                chosenOffice={chosenOffice}
+                coords={[coords.latitude, coords.longitude]}
+                officeData={officesData}
+              />
+              <Popup>
+                <button
+                  className='popup-routing-button'
+                  onClick={() =>
+                    routerHandler(
+                      [coords.latitude, coords.longitude],
+                      [item.latitude, item.longitude]
+                    )
+                  }
+                >
+                  Проложить маршрут
+                </button>
+              </Popup>
             </Marker>
           ))}
         </MarkerClusterGroup>
-        {/* <Marker position={[55.7522, 37.6156]}></Marker> */}
-        {/* <Marker position={[55.7522, 37.6156]} icon={markerIcon}></Marker> */}
-        {/* <RouterComponent data={offices} /> */}
       </MapContainer>
     </>
   );
