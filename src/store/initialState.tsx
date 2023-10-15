@@ -42,7 +42,7 @@ export interface Office {
   status: boolean;
   officeType: string;
   metroStation: string;
-  services: [Service];
+  services: Service[];
   charts: [
     {
       weeksDay: string;

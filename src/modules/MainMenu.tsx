@@ -1,13 +1,18 @@
 import styles from './MainMenu.module.css';
 import { OfficeCard } from '../components/OfficeCard/OfficeCard';
 import icon from '/VTB-map-icon.svg';
-import { FiltersState, Office, TipItem } from '../store/initialState';
+import {
+  FiltersState,
+  Geoposition,
+  Office,
+  TipItem,
+} from '../store/initialState';
 import { useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../store/store';
 import { useDispatch } from 'react-redux';
 import {
   collapseAllFilters,
-  getServicesAsync,
+  getOfficesAsync,
   setMainInput,
   setTips,
 } from '../slice/slice';
@@ -23,16 +28,16 @@ import {
 } from '../components/helpers/GettersFunctions';
 
 export const MainMenu = () => {
-  const offices: Office[] = useSelector(
-    (state: RootState) => state.mainSlice.offices.offices
-  );
-
   const tips: TipItem[] = useSelector(
     (state: RootState) => state.mainSlice.inputTips
   );
 
   const state: FiltersState = useSelector(
     (state: RootState) => state.mainSlice.filters
+  );
+
+  const clientGeoposition: Geoposition = useSelector(
+    (state: RootState) => state.mainSlice.clientGeoposition
   );
 
   const dispatch = useDispatch<AppDispatch>();
@@ -44,6 +49,18 @@ export const MainMenu = () => {
   const loading = useSelector((state: RootState) => state.mainSlice.loading);
 
   const [menu, setMenu] = useState(false);
+
+  const requestOffices = () => {
+    console.log(chosenServices, clientGeoposition);
+    dispatch(
+      getOfficesAsync({
+        servicesIds: chosenServices!.map((service) => service.serviceId),
+        limit: 15,
+        latitude: clientGeoposition.latitude,
+        longitude: clientGeoposition.longitude,
+      })
+    );
+  };
 
   return (
     <>
@@ -78,6 +95,22 @@ export const MainMenu = () => {
         {chosenServices && chosenServices.length > 0 && (
           <ChosenServices isBanks={isBanks(state)} services={chosenServices} />
         )}
+        <button
+          onClick={() => requestOffices()}
+          style={{
+            fontFamily: 'inherit',
+            padding: '10px',
+            backgroundColor: 'white',
+            borderColor: 'rgb(13, 105, 242)',
+            borderStyle: 'solid',
+            borderWidth: '1px',
+            cursor: 'pointer',
+            borderRadius: '10px',
+            marginTop: '10px',
+          }}
+        >
+          request offices
+        </button>
         {loading.loadingOffices ? <h2>Loading...</h2> : <OfficeCardsMenu />}
       </div>
     </>

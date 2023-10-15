@@ -1,4 +1,4 @@
-import { getOffices, getServices } from '../API/api';
+import { getOffices, getServices, getSortedOffices } from '../API/api';
 import iconVtb from '/VTB-map-icon.svg';
 import {
   ChooseServiceAction,
@@ -130,7 +130,7 @@ export const getServicesAsync = createAsyncThunk(
 
 export const getOfficesAsync = createAsyncThunk(
   'MainMenuAction/getOffices',
-  getOffices
+  getSortedOffices
 );
 
 const initialState: InitialState = {

@@ -110,18 +110,14 @@ export const Map = () => {
   };
 
   useEffect(() => {
-    officesData.forEach((item) =>
-      countDistance(item, latLng(coords.latitude, coords.longitude))
-    );
-
     navigator.geolocation.getCurrentPosition(
       (position) => {
         const latitude = position.coords.latitude;
         const longitude = position.coords.longitude;
         dispatch(setClientPosition({ latitude, longitude }));
-        officesData.forEach((item) =>
-          countDistance(item, latLng(coords.latitude, coords.longitude))
-        );
+        // officesData.forEach((item) =>
+        //   countDistance(item, latLng(coords.latitude, coords.longitude))
+        // );
 
         // dispatch(
         //   loadOffices(
@@ -133,9 +129,9 @@ export const Map = () => {
       },
       (error) => {
         dispatch(setClientPosition({ latitude: 55.7522, longitude: 37.6156 }));
-        officesData.forEach((item) =>
-          countDistance(item, latLng(coords.latitude, coords.longitude))
-        );
+        // officesData.forEach((item) =>
+        //   countDistance(item, latLng(coords.latitude, coords.longitude))
+        // );
 
         // dispatch(
         //   loadOffices(

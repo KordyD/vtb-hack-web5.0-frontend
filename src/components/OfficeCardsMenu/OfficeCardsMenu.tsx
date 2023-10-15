@@ -1,7 +1,7 @@
 import styles from './OfficeCardsMenu.module.css';
 import { OfficeCard } from '../OfficeCard/OfficeCard';
 import icon from '/VTB-map-icon.svg';
-import { Office } from '../../store/initialState';
+import { Geoposition, Office } from '../../store/initialState';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store/store';
 import { useDispatch } from 'react-redux';
@@ -17,15 +17,21 @@ export const OfficeCardsMenu = () => {
     dispatch(chooseOffice(id));
   };
 
+  const geo: Geoposition = useSelector(
+    (state: RootState) => state.mainSlice.clientGeoposition
+  );
+
   return (
     <ul className={styles.list}>
       {offices.map((item) => (
         <OfficeCard
+          geo={geo}
           img={icon}
+          lat={item.latitude}
+          lng={item.longitude}
           address={item.address}
           key={item.id}
           id={item.id}
-          distance={item.distance}
           handleClick={getOfficeMark}
         />
       ))}

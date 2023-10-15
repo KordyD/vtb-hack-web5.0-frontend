@@ -5,13 +5,11 @@ import { FiltersState } from '../../store/initialState';
 import { useDispatch } from 'react-redux';
 import {
   collapseAllFilters,
-  getServicesAsync,
   switchOption,
   toggleFilters,
 } from '../../slice/slice';
 import { ServicesMenu } from '../menu/ServicesMenu';
 import { CheckBoxFilters } from './CheckBoxFilters';
-import { ChosenServices } from '../menu/ChoosenServices';
 import {
   getCheckBoxes,
   getChosenServices,
