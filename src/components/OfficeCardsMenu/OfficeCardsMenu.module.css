@@ -2,6 +2,12 @@
   display: flex;
   flex-direction: column;
   gap: 15px;
-  margin-top: 25px;
   list-style: none;
+}
+
+.wrapper {
+  margin-top: 25px;
+
+  height: 90%;
+  overflow-y: scroll;
 }

@@ -19,10 +19,10 @@
   background-color: ghostwhite;
 }
 
-.icon {
+/* .icon {
   position: relative;
   top: -15px;
-}
+} */
 
 @media (max-width: 540px) {
   .officeCard {
@@ -31,8 +31,8 @@
   .wrapper {
     flex-direction: column;
   }
-  .icon {
+  /* .icon {
     width: 25px;
     top: 0;
-  }
+  } */
 }
