@@ -3,11 +3,5 @@
   flex-direction: column;
   gap: 15px;
   list-style: none;
-}
-
-.wrapper {
   margin-top: 25px;
-
-  height: 90%;
-  overflow-y: scroll;
 }

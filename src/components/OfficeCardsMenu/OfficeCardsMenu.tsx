@@ -18,19 +18,17 @@ export const OfficeCardsMenu = () => {
   };
 
   return (
-    <div className={styles.wrapper}>
-      <ul className={styles.list}>
-        {offices.map((item, index) => (
-          <OfficeCard
-            img={icon}
-            address={item.address}
-            key={index}
-            id={index}
-            distance={item.distance}
-            handleClick={getOfficeMark}
-          />
-        ))}
-      </ul>
-    </div>
+    <ul className={styles.list}>
+      {offices.map((item, index) => (
+        <OfficeCard
+          img={icon}
+          address={item.address}
+          key={index}
+          id={index}
+          distance={item.distance}
+          handleClick={getOfficeMark}
+        />
+      ))}
+    </ul>
   );
 };
