@@ -24,7 +24,6 @@ export const Filters = () => {
 
   const dispatch = useDispatch<AppDispatch>();
   const visibleServices = getVisibleServices(state);
-  const chosenServices = getChosenServices(state);
 
   const switchOptionHandler = (isBanksOption: boolean) => {
     if (isBanks(state) === isBanksOption) {

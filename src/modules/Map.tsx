@@ -13,7 +13,6 @@ import { useState, useRef, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store/store';
 import { useDispatch } from 'react-redux';
-import iconVtb from '/VTB-map-icon.svg';
 import { setClientPosition, setDistances } from '../slice/slice';
 import { Geoposition, Office } from '../store/initialState';
 import { createCustomIcon } from '../utils/createCustomIcon';
@@ -66,35 +65,6 @@ export const Map = () => {
     route.addTo(map);
   };
 
-  const countDistance = (item: Office, coord1: LatLng) => {
-    const map = useRef();
-    const dispatch = useDispatch();
-
-    // if (!coord1) {
-    //   const office: Office = {
-    //     address: item.address,
-    //     img: iconVtb,
-    //     distance: Math.round(item.distance) / 1000,
-    //     id: item.id,
-    //     status: item.status,
-    //     services: item.services,
-    //     charts: item.charts,
-    //     worksTime: item.worksTime,
-    //   };
-    //   return office;
-    // }
-
-    // if (!map) {
-    //   return null;
-    // }
-
-    const distance: number =
-      Math.round(map.distance(coord1, latLng(item.latitude, item.longitude))) /
-      1000;
-
-    dispatch(setDistances({ id: item.id, distance: distance }));
-  };
-
   const coords: Geoposition = useSelector(
     (state: RootState) => state.mainSlice.clientGeoposition
   );
@@ -115,35 +85,9 @@ export const Map = () => {
         const latitude = position.coords.latitude;
         const longitude = position.coords.longitude;
         dispatch(setClientPosition({ latitude, longitude }));
-        // officesData.forEach((item) =>
-        //   countDistance(item, latLng(coords.latitude, coords.longitude))
-        // );
-
-        // dispatch(
-        //   loadOffices(
-        //     officeData.map((item, index) =>
-        //       createOffice(index, item, latLng(latitude, longitude))
-        //     )
-        //   )
-        // );
       },
       (error) => {
         dispatch(setClientPosition({ latitude: 55.7522, longitude: 37.6156 }));
-        // officesData.forEach((item) =>
-        //   countDistance(item, latLng(coords.latitude, coords.longitude))
-        // );
-
-        // dispatch(
-        //   loadOffices(
-        //     officeData.map((item, index) =>
-        //       createOffice(
-        //         index,
-        //         item,
-        //         latLng(coords.latitude, coords.longitude)
-        //       )
-        //     )
-        //   )
-        // );
       }
     );
   }, []);

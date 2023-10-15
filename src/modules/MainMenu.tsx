@@ -1,12 +1,5 @@
 import styles from './MainMenu.module.css';
-import { OfficeCard } from '../components/OfficeCard/OfficeCard';
-import icon from '/VTB-map-icon.svg';
-import {
-  FiltersState,
-  Geoposition,
-  Office,
-  TipItem,
-} from '../store/initialState';
+import { FiltersState, Geoposition, TipItem } from '../store/initialState';
 import { useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../store/store';
 import { useDispatch } from 'react-redux';
@@ -17,7 +10,7 @@ import {
   setTips,
 } from '../slice/slice';
 import { Filters } from '../components/filters/FiltersComponent';
-import { createRef, useEffect, useState } from 'react';
+import { createRef, useState } from 'react';
 import { OfficeCardsMenu } from '../components/OfficeCardsMenu/OfficeCardsMenu';
 import { MainInput } from './MainInput';
 import { InputTips } from './InputTips';

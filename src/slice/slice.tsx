@@ -1,4 +1,4 @@
-import { getOffices, getServices, getSortedOffices } from '../API/api';
+import { getServices, getSortedOffices } from '../API/api';
 import iconVtb from '/VTB-map-icon.svg';
 import {
   ChooseServiceAction,

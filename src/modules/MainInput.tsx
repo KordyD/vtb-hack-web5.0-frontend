@@ -9,10 +9,6 @@ import { ServiceItem, TipItem } from '../store/initialState';
 export const MainInput = () => {
   const dispatch = useDispatch();
 
-  const value: string = useSelector(
-    (state: RootState) => state.mainSlice.mainInputValue
-  );
-
   const services: ServiceItem[] = useSelector(
     (state: RootState) => state.mainSlice.filters.banks.services
   );

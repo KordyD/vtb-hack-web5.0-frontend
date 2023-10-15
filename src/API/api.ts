@@ -1,4 +1,4 @@
-const url = 'https://w07bp3fp-8080.euw.devtunnels.ms/data/';
+const url = 'https://localhost:8080/data/';
 
 export interface Params {
   servicesIds: number[];
