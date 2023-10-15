@@ -1,10 +1,11 @@
 import { useSelector } from 'react-redux';
-import { RootState } from '../../store/store';
+import { AppDispatch, RootState } from '../../store/store';
 import styles from './Filters.module.css';
 import { FiltersState } from '../../store/initialState';
 import { useDispatch } from 'react-redux';
 import {
   collapseAllFilters,
+  getServicesAsync,
   switchOption,
   toggleFilters,
 } from '../../slice/slice';
@@ -17,8 +18,7 @@ export const Filters = () => {
     (state: RootState) => state.mainSlice.filters
   );
 
-  const dispatch = useDispatch();
-
+  const dispatch = useDispatch<AppDispatch>();
   const visibleServices = getVisibleServices(state);
   const chosenServices = getChosenServices(state);
 

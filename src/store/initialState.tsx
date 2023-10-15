@@ -53,9 +53,9 @@ export type FilterItem = {
 };
 
 export interface TipItem {
-    itemName: string;
-    isBanks: boolean;
-    subItemName?: string;
+  itemName: string;
+  isBanks: boolean;
+  subItemName?: string;
 }
 
 export type ServiceItem = {
@@ -64,6 +64,7 @@ export type ServiceItem = {
   subItems: SubItem[];
   chosen: boolean;
   clentId: string;
+  serviceId: number;
 };
 
 export interface Filter {

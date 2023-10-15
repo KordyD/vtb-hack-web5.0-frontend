@@ -1,3 +1,4 @@
+import { getServices } from '../API/api';
 import {
   ChooseServiceAction,
   ExpandFilterAction,
@@ -11,7 +12,7 @@ import {
   Geoposition,
   TipItem,
 } from '../store/initialState';
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 const banksServices: ServiceItem[] = [
   {
@@ -24,6 +25,7 @@ const banksServices: ServiceItem[] = [
       { name: 'Экспресс кредит', chosen: false },
       { name: 'Рефинансирование', chosen: false },
     ],
+    serviceId: 1,
   },
   {
     clentId: 'PF',
@@ -34,6 +36,7 @@ const banksServices: ServiceItem[] = [
       { name: 'Рассчитать кредит', chosen: false },
       { name: 'Кредит наличными', chosen: false },
     ],
+    serviceId: 2,
   },
   {
     clentId: 'PF',
@@ -46,6 +49,7 @@ const banksServices: ServiceItem[] = [
       { name: 'Пенсионные карты', chosen: false },
       { name: 'Карты жителя', chosen: false },
     ],
+    serviceId: 3,
   },
 
   {
@@ -54,6 +58,7 @@ const banksServices: ServiceItem[] = [
     expanded: false,
     name: 'Ипотека',
     subItems: [],
+    serviceId: 4,
   },
   {
     clentId: 'PF',
@@ -64,6 +69,7 @@ const banksServices: ServiceItem[] = [
       { name: 'Автокредит наличными', chosen: false },
       { name: 'Автокредит в автосалоне', chosen: false },
     ],
+    serviceId: 5,
   },
   {
     clentId: 'PF',
@@ -71,6 +77,7 @@ const banksServices: ServiceItem[] = [
     expanded: false,
     name: 'Вклады и счета',
     subItems: [],
+    serviceId: 6,
   },
   {
     clentId: 'PF',
@@ -78,6 +85,7 @@ const banksServices: ServiceItem[] = [
     expanded: false,
     name: 'Инвестиции',
     subItems: [],
+    serviceId: 7,
   },
   {
     clentId: 'PF',
@@ -85,6 +93,7 @@ const banksServices: ServiceItem[] = [
     expanded: false,
     name: 'Платежи и переводы',
     subItems: [{ name: 'Оплата услуг', chosen: false }],
+    serviceId: 8,
   },
   {
     clentId: 'PF',
@@ -96,6 +105,7 @@ const banksServices: ServiceItem[] = [
       { name: 'Аренда сейфовых ячеек', chosen: false },
       { name: 'Банкротство физических лиц', chosen: false },
     ],
+    serviceId: 9,
   },
   {
     clentId: 'PF',
@@ -107,8 +117,19 @@ const banksServices: ServiceItem[] = [
       { name: 'Продать валюту', chosen: false },
       { name: 'Купить золото', chosen: false },
     ],
+    serviceId: 10,
   },
 ];
+
+interface serviceResponse {
+  serviceId: number;
+  serviceName: string;
+}
+
+export const getServicesAsync = createAsyncThunk(
+  'MainMenuAction/getServices',
+  getServices
+);
 
 const initialState: InitialState = {
   clientGeoposition: {
@@ -133,7 +154,7 @@ const initialState: InitialState = {
           checked: false,
         },
       ],
-      services: banksServices,
+      services: [], //Обновить при загрузке страницы
     },
     itms: {
       chosen: false,
@@ -147,7 +168,7 @@ const initialState: InitialState = {
   },
   chosenOffice: null,
   inputTips: [],
-  mainInputValue: ""
+  mainInputValue: '',
 };
 
 export const mainMenuSlice = createSlice({
@@ -254,12 +275,35 @@ export const mainMenuSlice = createSlice({
     },
 
     setTips: (state, action: PayloadAction<TipItem[]>) => {
-      state.inputTips = action.payload
+      state.inputTips = action.payload;
     },
 
     setMainInput: (state, action: PayloadAction<string>) => {
-      state.mainInputValue = action.payload
-    }
+      state.mainInputValue = action.payload;
+    },
+  },
+  extraReducers(builder) {
+    builder
+      .addCase(
+        getServicesAsync.fulfilled,
+        (state, action: PayloadAction<serviceResponse[]>) => {
+          state.filters.banks.services = action.payload.map(
+            (item: serviceResponse) => {
+              return {
+                clentId: 'PF',
+                name: item.serviceName,
+                chosen: false,
+                expanded: false,
+                subItems: [],
+                serviceId: item.serviceId,
+              };
+            }
+          );
+        }
+      )
+      .addCase(getServicesAsync.rejected, (state, action) => {
+        state.filters.banks.services = banksServices;
+      });
   },
 });
 export const {

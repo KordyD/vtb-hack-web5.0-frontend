@@ -6,12 +6,11 @@ import { useDispatch } from 'react-redux';
 import { chooseItem, expandFilter } from '../../slice/slice';
 
 export type MenuItemProps = ServiceItem & {
-  id: number;
   isBanks: boolean;
 };
 
 export const ServiceItemComponent = ({
-  id,
+  serviceId,
   isBanks,
   expanded,
   name,
@@ -23,7 +22,7 @@ export const ServiceItemComponent = ({
   const dispatch = useDispatch();
 
   const extend = () => {
-    dispatch(expandFilter({ isBanks, menuItemKey: id }));
+    dispatch(expandFilter({ isBanks, menuItemKey: serviceId }));
   };
 
   const itemRef: React.RefObject<HTMLInputElement> = createRef();

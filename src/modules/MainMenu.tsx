@@ -3,9 +3,14 @@ import { OfficeCard } from '../components/OfficeCard/OfficeCard';
 import icon from '/VTB-map-icon.svg';
 import { Office, TipItem } from '../store/initialState';
 import { useSelector } from 'react-redux';
-import { RootState } from '../store/store';
+import { AppDispatch, RootState } from '../store/store';
 import { useDispatch } from 'react-redux';
-import { collapseAllFilters, setMainInput, setTips } from '../slice/slice';
+import {
+  collapseAllFilters,
+  getServicesAsync,
+  setMainInput,
+  setTips,
+} from '../slice/slice';
 import { Filters } from '../components/filters/FiltersComponent';
 import { createRef, useState } from 'react';
 import { OfficeCardsMenu } from '../components/OfficeCardsMenu/OfficeCardsMenu';
@@ -21,11 +26,13 @@ export const MainMenu = () => {
     (state: RootState) => state.mainSlice.inputTips
   );
 
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
 
   const menuWindow: React.RefObject<HTMLInputElement> = createRef();
 
   const [menu, setMenu] = useState(false);
+
+  dispatch(getServicesAsync());
 
   return (
     <>
